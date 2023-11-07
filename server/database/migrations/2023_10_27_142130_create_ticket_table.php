@@ -16,7 +16,7 @@ return new class extends Migration
             $table->char('MaTicket', 20)->nullable();
             $table->char('MaSV', 10);
             $table->char('MaSach', 10);
-            $table->char('MaAdmin', 10);
+            $table->char('MaAdmin', 10)->nullable();
             $table->datetime('DateCreateTicket');
             $table->datetime('DateAcceptTiket')->nullable();
             $table->datetime('DateGiveBack')->nullable();

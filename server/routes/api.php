@@ -34,7 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // user
     Route::get('/Users/ListUser', [UserController::class, 'index']);
     Route::get('/Users/ShowUser/{id}', [UserController::class, 'show']);
-    Route::post('/Users/AddUser', [UserController::class, 'store']);
+    // Route::post('/Users/AddUser', [UserController::class, 'store']);
     Route::delete('/Users/DeleteUser/{id}', [UserController::class, 'destroy']);
     Route::get('/Users/SearchUser', [UserController::class, 'searchUser']);
 
@@ -66,6 +66,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 //Auth
 Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/Users/AddUser', [UserController::class, 'store']);
 
 //Book
 Route::get('/Books/ListBook', [BookController::class, 'index']);

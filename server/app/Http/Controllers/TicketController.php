@@ -124,9 +124,7 @@ class TicketController extends Controller
                         $model->DateAcceptTiket = Carbon::now();
                         $model->StatusTicket = 1;
                         $model->save();
-                    }
-
-                    return response()->json([
+                    } return response()->json([
                         'status' => 200,
                         'message' => "Tickets Update Successfully!",
                         'tickets' => $model,
@@ -137,13 +135,7 @@ class TicketController extends Controller
                         'message' => "Book do not exist!",
                     ], 400);
                 }
-            } else {
-                return response()->json([
-                    'status' => 400,
-                    'message' => "Ticket is not in the correct status!",
-                ], 400);
-            }
-            if ($ticketsDetail->StatusTicket == '1') {
+            } else if ($ticketsDetail->StatusTicket == '1') {
                 $model = Ticket::where('id', $id)->whereNotNull('DateAcceptTiket')->whereNull('DateGiveBack')->first();
                 $recordBook = Book::where('MaSach', $model->MaSach)->where('Quantity', '>=', 0)->first();
                 if ($recordBook) {
@@ -166,6 +158,11 @@ class TicketController extends Controller
                             'message' => "Failed to update ticket!",
                         ], 400);
                     }
+                } else if($ticketsDetail->StatusTicket != '0' && $ticketsDetail->StatusTicket != '1') {
+                    return response()->json([
+                        'status' => 400,
+                        'message' => "Ticket has been approved!",
+                    ], 400);
                 } else {
                     return response()->json([
                         'status' => 400,
