@@ -20,6 +20,7 @@ class Admin extends Model
         'password',
         'Token',
         'ImageAdmin',
+        'role'
     ];
     public $timestamps = false;
     public function admin() {

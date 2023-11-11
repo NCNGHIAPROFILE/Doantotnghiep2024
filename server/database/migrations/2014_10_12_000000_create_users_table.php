@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('Token', 255)->nullable();
             $table->string('OTP', 255)->nullable();
             $table->string('ImageUser', 255)->nullable();
+            $table->string('role')->default('user');
         });
     }
 

@@ -31,6 +31,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'Token',
         'OTP',
         'ImageUser',
+        'role'
     ];
     public $timestamps = false;
     public function users() {

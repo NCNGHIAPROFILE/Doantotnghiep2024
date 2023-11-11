@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
 use App\Mail\OtpMail;
+use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use \Illuminate\Support\Facades\Hash;
@@ -55,6 +56,7 @@ class AuthController extends Controller
             'password' => $request->password
         ])){
             $user = User::whereEmail($request->email)->first();
+            $admin = Admin::whereEmail($request->email)->first();
             if($user){
                 $user->Token = $user->createToken($request->email)->plainTextToken;
                 User::where('id', $user->id)->update(['Token' => $user->Token]);
@@ -62,6 +64,14 @@ class AuthController extends Controller
                     'status' => 200,
                     'message' => "User Login Success!",
                     'Token' => $user->Token
+                ], 200);
+            } else if($admin){
+                $admin->Token = $admin->createToken($request->email)->plainTextToken;
+                Admin::where('id', $admin->id)->update(['Token' => $admin->Token]);
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Admin Login Success!",
+                    'Token' => $admin->Token
                 ], 200);
             }
         }

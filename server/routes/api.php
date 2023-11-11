@@ -24,10 +24,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'checkUserType:user'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
+});
+
+Route::middleware(['auth:sanctum', 'checkUserType:admin'])->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+
     // book
-    Route::post('Books/AddBook', [BookController::class, 'store']);
+    Route::post('/Books/AddBook', [BookController::class, 'store']);
     Route::put('/Books/UpdateBook/{id}', [BookController::class, 'update']);
     Route::delete('/Books/DeleteBook/{id}', [BookController::class, 'destroy']);
 
@@ -39,15 +44,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/Users/SearchUser', [UserController::class, 'searchUser']);
 
     // ticket
-    Route::get('Tickets/ListTicket', [TicketController::class, 'index']);
-    Route::post('Tickets/AddTicket', [TicketController::class, 'store']);
+    Route::get('/Tickets/ListTicket', [TicketController::class, 'index']);
+    Route::post('/Tickets/AddTicket/{id}', [TicketController::class, 'store']);
     Route::get('/Tickets/ShowTicket/{id}', [TicketController::class, 'show']);
     Route::put('/Tickets/UpdateBookAccept/{id}', [TicketController::class, 'UpdateBooupdateAccept']);
-    // Route::put('/Tickets/UpdateBookGiveBack/{id}', [TicketController::class, 'UpdateBookGiveBack']);
     Route::delete('/Tickets/DeleteTicket/{id}', [TicketController::class, 'destroy']);
     Route::get('/Tickets/SearchBookTicket', [TicketController::class, 'searchBookTicket']);
     Route::get('/Tickets/SearchUserTicket', [TicketController::class, 'searchUserTicket']);
     Route::get('/Tickets/ShowUserTicket', [TicketController::class, 'showUserTicket']);
+    Route::get('/Tickets/ShowTicketUser', [TicketController::class, 'showTicketUser']);
+
 
     //producer
     Route::get('/Producers/ListProducer', [ProducerController::class, 'index']);
@@ -57,7 +63,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //history
     Route::get('/Historys/ListHistory', [HistoryController::class, 'index']);
-    Route::post('/Historys/AddHistory', [HistoryController::class, 'store']);
+    Route::post('/Historys/AddHistory/{id}', [HistoryController::class, 'store']);
     Route::get('/Historys/ShowHistory/{id}', [HistoryController::class, 'show']);
     Route::delete('/Historys/DeleteHistory/{id}', [HistoryController::class, 'destroy']);
     Route::get('/Historys/ShowHistoryUser', [HistoryController::class, 'showHistoryUser']);

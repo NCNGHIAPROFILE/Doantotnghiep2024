@@ -18,13 +18,21 @@ class UserController extends Controller
     }
     public function index()
     {
-        $users = User::all();
-        $usersCount = $users->count();
-        return response()->json([
-            'status' => 200,
-            'Recoure' => $usersCount,
-            'Users' => $users
-        ]);
+        $check = auth()->check();
+        if($check){
+            $users = User::all();
+            $usersCount = $users->count();
+            return response()->json([
+                'status' => 200,
+                'Recoure' => $usersCount,
+                'Users' => $users
+            ]);
+        } else{
+            return response()->json([
+                'status' => 400,
+                'message' => "You are not logged in! Login Now."
+            ], 400);
+        }
     }
 
     /**
@@ -68,31 +76,31 @@ class UserController extends Controller
         }
     }
 
-    public function test(){
-        $name = "Điệp";
-        $MSSV = "1951220039";
-        $name = Str::slug($name, '_');
-        $email = $name . "_" . $MSSV . "@dau.edu.vn";
-        echo($email);
-    }
-
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        $detail_Users = User::where('id', $id)->first();
-        if($detail_Users){
-            return response()->json([
-                'status' => 200,
-                'message' => "Users View Detail Successfully!",
-                'users' => $detail_Users
-            ], 200);
-        }
-        else{
+        $check = auth()->check();
+        if($check){
+            $detail_Users = User::where('id', $id)->first();
+            if($detail_Users){
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Users View Detail Successfully!",
+                    'users' => $detail_Users
+                ], 200);
+            }
+            else{
+                return response()->json([
+                    'status' => 400,
+                    'message' => "Users View Detail Failed! Because Users do not exist!"
+                ], 400);
+            }
+        } else {
             return response()->json([
                 'status' => 400,
-                'message' => "Users View Detail Failed! Because Users do not exist!"
+                'message' => "You are not logged in! Login Now."
             ], 400);
         }
     }
@@ -102,25 +110,33 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $users = User::where('id', $id)->get();
-        if($users->count() > 0){
-            $users = array();
-            $users['AddressUser'] = $request->AddressUser;
-            $users['Phone'] = $request->Phone;
-            $users['password'] = $request->password;
-            $users['ImageUser'] = $request->ImageUser;
-            $udapetUsers = User::where('id', $id)->update($users);
+        $check = auth()->check();
+        if($check){
+            $users = User::where('id', $id)->get();
+            if($users->count() > 0){
+                $users = array();
+                $users['AddressUser'] = $request->AddressUser;
+                $users['Phone'] = $request->Phone;
+                $users['password'] = $request->password;
+                $users['ImageUser'] = $request->ImageUser;
+                $udapetUsers = User::where('id', $id)->update($users);
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Users Update Successfully!",
+                    'users' => $udapetUsers
+                ], 200);
+            }
+            else{
+                return response()->json([
+                    'status' => 500,
+                    'message' => "Users Update Failed!"
+                ], 500);
+            }
+        } else {
             return response()->json([
-                'status' => 200,
-                'message' => "Users Update Successfully!",
-                'users' => $udapetUsers
-            ], 200);
-        }
-        else{
-            return response()->json([
-                'status' => 500,
-                'message' => "Users Update Failed!"
-            ], 500);
+                'status' => 400,
+                'message' => "You are not logged in! Login Now."
+            ], 400);
         }
     }
 
@@ -128,40 +144,56 @@ class UserController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
-    {
-        $affectedRows = User::Where('id', $id)->delete();
-        if ($affectedRows > 0) {
+    {    
+        $check = auth()->check();
+        if($check){
+            $affectedRows = User::Where('id', $id)->delete();
+            if ($affectedRows > 0) {
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Users Deleted Successfully",
+                ], 200);
+            }  
+            else {
+                return response()->json([
+                    'status' => 500,
+                    'message' => "Users Deleted Failed!",
+                ], 500);
+            }
+        } else {
             return response()->json([
-                'status' => 200,
-                'message' => "Users Deleted Successfully",
-            ], 200);
-        }  
-        else {
-            return response()->json([
-                'status' => 500,
-                'message' => "Users Deleted Failed!",
-            ], 500);
+                'status' => 400,
+                'message' => "You are not logged in! Login Now."
+            ], 400);
         }
     }
 
     public function searchUser(Request $request)
     {
-        $searchData = $request->input('searchUser');
-        $users = User::Where('MaSV', 'like', '%'.$searchData.'%')->get();
-        $usersCount = User::Where('MaSV', 'like', '%'.$searchData.'%')->count();
-        if($users){
-            return response()->json([
-                'status' => 200,
-                'message' => "Users Search Successfully",
-                'Resource' => $usersCount,
-                'users' => $users
-            ], 200);
-        }
-        else{
+        $check = auth()->check();
+        if($check){
+            $searchData = $request->input('searchUser');
+            $users = User::Where('MaSV', 'like', '%'.$searchData.'%')->get();
+            $usersCount = User::Where('MaSV', 'like', '%'.$searchData.'%')->count();
+            if($users){
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Users Search Successfully",
+                    'Resource' => $usersCount,
+                    'users' => $users
+                ], 200);
+            }
+            else{
+                return response()->json([
+                    'status' => 400,
+                    'message' => "Users Search Failed!"
+                ], 200);
+            }
+        } else {
             return response()->json([
                 'status' => 400,
-                'message' => "Users Search Failed!"
-            ], 200);
+                'message' => "You are not logged in! Login Now."
+            ], 400);
         }
     }
 }

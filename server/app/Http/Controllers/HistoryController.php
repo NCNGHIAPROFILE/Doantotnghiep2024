@@ -18,32 +18,71 @@ class HistoryController extends Controller
         $this->historys = $historys;
     }
     public function index()
-    {
-        $historys = History::all();
-        $historysCount = History::all()->count();
-        return response()->json([
-            'status' => 200,
-            'Recoure' => $historysCount,
-            'Historys' => $historys
-        ], 200);
+    {    
+        $check = auth()->check();
+        if($check){
+            $historys = History::all();
+            $historysCount = History::all()->count();
+            return response()->json([
+                'status' => 200,
+                'Recoure' => $historysCount,
+                'Historys' => $historys
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 400,
+                'message' => "You are not logged in! Login Now."
+            ], 400);
+        }
+    }
+
+    public function listUserHistory()
+    {    
+        $check = auth()->check();
+        if($check){
+            $user = auth()->user();
+            $historys = History::where('MaSV', $user->MaSV)->get();
+            $historysCount = History::where('MaSV', $user->MaSV)->count();
+            return response()->json([
+                'status' => 200,
+                'Recoure' => $historysCount,
+                'Historys' => $historys
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 400,
+                'message' => "You are not logged in! Login Now."
+            ], 400);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(String $id)
     {
-        $dataCreate = $request->all();
-        $get_date = Carbon::now();
-        $dataCreate['MaSV'] = $request->MaSV;
-        $dataCreate['MaSach'] = $request->MaSach;
-        $dataCreate['DateDownload'] = $get_date;
-        $historys = History::create($dataCreate);
-        return response()->json([
-            'status' => 201,
-            'message' => "Historys Created successfully!",
-            'historys' => $historys
-        ], 201);
+        $check = auth()->check();
+        if($check){
+            $user = auth()->user();
+            $book = Book::where('id', $id)->first();
+            if( $book ){
+                $get_date = Carbon::now();
+                $dataCreate['MaSV'] = $user->MaSV;
+                $dataCreate['MaSach'] = $book->MaSach;
+                $dataCreate['DateDownload'] = $get_date;
+                $historys = History::create($dataCreate);
+                return response()->json([
+                    'status' => 201,
+                    'message' => "Historys Created successfully!",
+                    'historys' => $historys
+                ], 201);
+            }
+        } else {
+            return response()->json([
+                'status' => 400,
+                'message' => "You are not logged in! Login Now."
+            ], 400);
+        }
     }
 
     /**
@@ -51,19 +90,27 @@ class HistoryController extends Controller
      */
     public function show(string $id)
     {
-        $user = User::where('id', $id)->first();
-        $detail_History = History::where('MaSV', $user->MaSV)->get();
-        if($detail_History){
-            return response()->json([
-                'status' => 200,
-                'message' => "Historys View Detail Successfully!",
-                'historys' => $detail_History
-            ], 200);
-        }
-        else{
+        $check = auth()->check();
+        if($check){
+            $user = User::where('id', $id)->first();
+            $detail_History = History::where('MaSV', $user->MaSV)->get();
+            if($detail_History){
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Historys View Detail Successfully!",
+                    'historys' => $detail_History
+                ], 200);
+            }
+            else{
+                return response()->json([
+                    'status' => 400,
+                    'message' => "Historys View Detail Failed! Because historys do not exist!"
+                ], 400);
+            }
+        } else {
             return response()->json([
                 'status' => 400,
-                'message' => "Historys View Detail Failed! Because historys do not exist!"
+                'message' => "You are not logged in! Login Now."
             ], 400);
         }
     }
@@ -81,66 +128,90 @@ class HistoryController extends Controller
      */
     public function destroy(string $id)
     {
-        $affectedRows = History::where('id', $id)->delete();
-        if ($affectedRows > 0) {
+        $check = auth()->check();
+        if($check){
+            $affectedRows = History::where('id', $id)->delete();
+            if ($affectedRows > 0) {
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Historys Deleted Successfully",
+                ], 200);
+            }  
+            else {
+                return response()->json([
+                    'status' => 500,
+                    'message' => "Historys Deleted Failed!",
+                ], 500);
+            }
+        } else {
             return response()->json([
-                'status' => 200,
-                'message' => "Historys Deleted Successfully",
-            ], 200);
-        }  
-        else {
-            return response()->json([
-                'status' => 500,
-                'message' => "Historys Deleted Failed!",
-            ], 500);
+                'status' => 400,
+                'message' => "You are not logged in! Login Now."
+            ], 400);
         }
     }
 
     public function showHistoryUser(Request $request)
     {
-        $searchData = $request->input('showHistoryUser');
-        $historys = History::Where('MaSV', 'like', '%'.$searchData.'%')->get();
-        $historysCount = History::Where('MaSV', 'like', '%'.$searchData.'%')->count();
-        if($historys){
-            return response()->json([
-                'status' => 200,
-                'message' => "Historys Search Successfully",
-                'Resource' => $historysCount,
-                'historys' => $historys
-            ], 200);
-        }
-        else{
+        $check = auth()->check();
+        if($check){
+            $searchData = $request->input('showHistoryUser');
+            $historys = History::Where('MaSV', 'like', '%'.$searchData.'%')->get();
+            $historysCount = History::Where('MaSV', 'like', '%'.$searchData.'%')->count();
+            if($historys){
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Historys Search Successfully",
+                    'Resource' => $historysCount,
+                    'historys' => $historys
+                ], 200);
+            }
+            else{
+                return response()->json([
+                    'status' => 400,
+                    'message' => "Historys Search Failed!"
+                ], 200);
+            }
+        } else {
             return response()->json([
                 'status' => 400,
-                'message' => "Historys Search Failed!"
-            ], 200);
+                'message' => "You are not logged in! Login Now."
+            ], 400);
         }
     }
 
     public function showHistoryBook(Request $request)
     {
-        $searchData = $request->input('showHistoryBook');
-        $historys = Book::where('NameBook', 'like', '%' . $searchData . '%')->get();
-        if ($historys->isEmpty()) {
+        $check = auth()->check();
+        if($check){
+            $searchData = $request->input('showHistoryBook');
+            $historys = Book::where('NameBook', 'like', '%' . $searchData . '%')->get();
+            if ($historys->isEmpty()) {
+                return response()->json([
+                    'status' => 400,
+                    'message' => "Books not found!"
+                ], 400);
+            }
+            $historyIds = $historys->pluck('MaSach')->toArray();
+            $historys = History::whereIn('MaSach', $historyIds)->get();
+            $historysCount = $historys->count();
+            if($historysCount){
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Historys Search Successfully",
+                    'Resource' => $historysCount,
+                    'historys' => $historys
+                ], 200);
+            }
             return response()->json([
                 'status' => 400,
-                'message' => "Books not found!"
+                'message' => "Historys Search Failed!"
+            ], 400);
+        } else {
+            return response()->json([
+                'status' => 400,
+                'message' => "You are not logged in! Login Now."
             ], 400);
         }
-        $historyIds = $historys->pluck('MaSach')->toArray();
-        $historys = History::whereIn('MaSach', $historyIds)->get();
-        $historysCount = $historys->count();
-        if($historysCount){
-            return response()->json([
-                'status' => 200,
-                'message' => "Historys Search Successfully",
-                'Resource' => $historysCount,
-                'historys' => $historys
-            ], 200);
-        }
-        return response()->json([
-            'status' => 400,
-            'message' => "Historys Search Failed!"
-        ], 400);
     }
 }

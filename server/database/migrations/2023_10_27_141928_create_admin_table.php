@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('password', 255);
             $table->string('Token', 255)->nullable();
             $table->string('ImageAdmin', 255)->nullable();
+            $table->string('role')->default('admin');
         });
     }
 
