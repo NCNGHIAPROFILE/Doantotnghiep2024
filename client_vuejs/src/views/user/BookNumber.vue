@@ -158,24 +158,31 @@
     methods: {
       handleMenuItemClick(item) {
         if (item == 1){
+          window.location.reload();
           this.$router.push({ name: "UserListTicketCreate" });
         }else if (item == 2){
+          window.location.reload();
           this.$router.push({ name: "UserListTicketAccpet" });
         }else if (item == 3){
+          window.location.reload();
           this.$router.push({ name: "UserListTicketGiveback" });
         }
       },
       handleMenuItemClickBook(item) {
         if (item == 1){
-            this.$router.push({ name: "Home" });
+          window.location.reload();
+          this.$router.push({ name: "Home" });
         }else if (item == 2){
-            this.$router.push({ name: "UserListBookNumber" });
+          window.location.reload();
+          this.$router.push({ name: "UserListBookNumber" });
         }
       },
       handleUserItemClick(item) {
         if (item == 1){
+          window.location.reload();
           this.$router.push({ name: "UserInfo" });
         }else if (item == 2){
+          window.location.reload();
           this.$router.push({ name: "UserPassword" });
         }
       },
@@ -183,14 +190,17 @@
         Request.post("logout")
         .then(response => {
             console.log(response.data);
+            window.location.reload();
             this.$router.push('/login');
           })
           .catch(error => {
+            window.location.reload();
             console.error('Logout error:', error);
           });
       },
       getListBook() {
         this.loading = true;
+        window.location.reload();
         Request.get("Books/ListBookNumber")
           .then((response) => {
             this.books = response.data.books;
@@ -244,6 +254,7 @@
       },
       changePage(page) {
           this.currentPage = page;
+          window.location.reload();
         },
       viewDetails(book) {
         // this.$router.push('/login');

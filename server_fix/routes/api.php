@@ -48,6 +48,7 @@ Route::group(['middleware' => 'api'], function () {
     Route::delete('/Historys/DeleteHistory/{id}', [HistoryController::class, 'destroy']);
     Route::get('/Historys/ShowHistoryUser', [HistoryController::class, 'showHistoryUser']);
     Route::get('/Historys/ShowHistoryBook', [HistoryController::class, 'showHistoryBook']);
+    Route::get('/Historys/ShowUserHistoryBook', [HistoryController::class, 'listUserHistory']);
 
 
     // Admin router

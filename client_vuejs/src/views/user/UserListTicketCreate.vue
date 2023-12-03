@@ -119,49 +119,51 @@
       this.getData();
     },
     methods: {
-        logout() {
-            Request.post("logout")
-            .then(response => {
-                console.log(response.data);
-                this.$router.push('/login');
-            })
-            .catch(error => {
-                console.error('Logout error:', error);
-            });
-        },
-        getData() {
-            console.log("cccc");
-            Request.get("Tickets/ListTicketUserCreate")
-            .then((response) => {
-                console.log(response.data);
-                this.data = response.data;
-            })
-            .catch(() => {})
-            .finally(() => {});
-        },
-        handleMenuItemClick(item) {
-            if (item == 1){
-                this.$router.push({ name: "UserListTicketCreate" });
-            }else if (item == 2){
-                this.$router.push({ name: "UserListTicketAccpet" });
-            }else if (item == 3){
-                this.$router.push({ name: "UserListTicketGiveback" });
-            }
-        },
-        handleMenuItemClickBook(item) {
-            if (item == 1){
-                this.$router.push({ name: "Home" });
-            }else if (item == 2){
-                this.$router.push({ name: "UserListBookNumber" });
-            }
-        },
-        handleUserItemClick(item) {
-            if (item == 1){
-                this.$router.push({ name: "UserInfo" });
-            }else if (item == 2){
-                this.$router.push({ name: "UserPassword" });
-            }
-        },
+      logout() {
+        Request.post("logout")
+        .then(response => {
+            console.log(response.data);
+            this.$router.push('/login');
+        })
+        .catch(error => {
+            console.error('Logout error:', error);
+        });
+      },
+      getData() {
+        Request.get("Tickets/ListTicketUserCreate")
+        .then((response) => {
+            console.log(response.data);
+            this.data = response.data;
+        })
+        .catch(() => {})
+        .finally(() => {});
+      },
+      handleMenuItemClick(item) {
+        if (item == 1){
+            this.$router.push({ name: "UserListTicketCreate" });
+        }else if (item == 2){
+            this.$router.push({ name: "UserListTicketAccpet" });
+        }else if (item == 3){
+            this.$router.push({ name: "UserListTicketGiveback" });
+        }
+      },
+      handleMenuItemClickBook(item) {
+        if (item == 1){
+            this.$router.push({ name: "Home" });
+        }else if (item == 2){
+            this.$router.push({ name: "UserListBookNumber" });
+        }
+      },
+      handleUserItemClick(item) {
+        if (item == 1){
+            this.$router.push({ name: "UserInfo" });
+        }else if (item == 2){
+            this.$router.push({ name: "UserPassword" });
+        }
+      },
+      handleUserHistoryClick(){
+        this.$router.push({ name: "UserHistory" });
+      }
     },
   };
   </script>

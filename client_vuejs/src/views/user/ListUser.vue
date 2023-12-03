@@ -3,11 +3,21 @@
       <v-app-bar app color="error">
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         <v-toolbar-title class="mr-6">List người dùng</v-toolbar-title>
-        <v-btn class="ma-2" color="#90CAF9" @click="handleAddNew">
+        <v-btn class="ma-2" color="#90CAF9" @click="handleAddNew()">
           <span class="mdi mdi-book-plus"></span>
           Thêm mới</v-btn>
-        <v-spacer></v-spacer>
-  
+          <v-file-input
+          style="padding-top: 20px;"
+            v-model="selectedFile"
+            :showSize="500"
+            label="Chọn tệp tin Excel"
+            accept=".xls, .xlsx, .csv"
+            @change="onFileChange"
+          ></v-file-input>
+
+          <v-btn style="color: red; background-color:#90CAF9" @click="importUsers" :disabled="!selectedFile">Import Users</v-btn>
+          <v-spacer></v-spacer>
+
         <v-btn class="ma-2" outlined color="#90CAF9" @click="logout()">
           <span class="mdi mdi-logout"></span>
           Logout</v-btn>
@@ -76,6 +86,16 @@
           </v-list-item>
         </v-list-item-group>
       </v-navigation-drawer>
+      <v-progress-circular
+        indeterminate
+        color="red"
+        v-if="loading"  
+        style="display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-left: 1500px"   
+        absolute 
+      ></v-progress-circular>
       <v-data-table
         :headers="headers"
         :items="data?.users"
@@ -101,8 +121,10 @@
     data() {
       return {
         userName: "Hello Admin",
-        drawer: true,
+        drawer: false,
         data: {},
+        loading: false,
+        selectedFile: null,
         headers: [
           { text: "id", value: "id" },
           { text: "Picture", value: "ImageUser" },
@@ -120,6 +142,24 @@
       this.getData();
     },
     methods: {
+      onFileChange() {
+        console.log("Selected file:", this.selectedFile);
+      },
+      importUsers() {
+        this.loading = true;
+        console.log("Importing users from Excel:", this.selectedFile);
+        const formData = new FormData();
+        formData.append("file", this.selectedFile);
+        Request.post("ImportUser", formData)
+          .then(() => {
+            setTimeout(() => {
+              this.$router.push({ name: "ListUser" });
+              this.loading = false;
+              window.location.reload();
+            }, 1000);
+          })
+          .catch(() => {});
+        },  
         logout() {
             Request.post("logout")
             .then(response => {
@@ -141,6 +181,19 @@
         },
         handleUser(){
             this.$router.push({ name: "ListUser" });
+        },
+        handleAddNewExcel(){
+          Request.post("login", this.params)
+          .then((response) => {
+            if (response.data.status == 201) {
+              this.$router.push({ name: "ListUser" });
+            } else {
+              this.$router.push({ name: "Home" });
+            }
+          })
+          .catch(() => {})
+          .finally(() => {
+          });
         },
         handleMenuItemClick(item) {
             if (item == 1){

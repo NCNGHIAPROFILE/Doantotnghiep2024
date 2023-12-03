@@ -189,6 +189,9 @@ export default {
         this.$router.push({ name: "UserPassword" });
       }
     },
+    handleUserHistoryClick(){
+      this.$router.push({ name: "UserHistory" });
+    },
     getListBook() {
       this.loading = true;
       Request.get("Books/ListBookBasic")

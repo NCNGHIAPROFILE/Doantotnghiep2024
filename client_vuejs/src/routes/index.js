@@ -9,6 +9,7 @@ import UserListBookNumber from "@/views/user/BookNumber.vue";
 import UserListTicketCreate from "@/views/user/UserListTicketCreate.vue";
 import UserListTicketAccpet from "@/views/user/UserListTicketAccpet.vue";
 import UserListTicketGiveback from "@/views/user/UserListTicketGiveback.vue";
+import UserHistory from "@/views/user/UserHistory.vue";
 import AdminListTicketCreate from "@/views/admin/ListTicket.vue";
 import AdminListTicketAccpet from "@/views/admin/LictTicketAcpect.vue";
 import AdminListTicketGiveback from "@/views/admin/ListTicketGiveback.vue";
@@ -59,6 +60,12 @@ const routes = [{
       name: 'Home',
       component: Home,
       meta: { title: 'Home' }
+    },
+    {
+      path: '/user-download',
+      name: 'UserHistory',
+      component: UserHistory,
+      meta: { title: 'UserHistory' }
     },
     {
       path: '/user-list-book-number',

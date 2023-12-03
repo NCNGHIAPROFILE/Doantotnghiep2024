@@ -161,6 +161,9 @@
                 this.$router.push({ name: "UserPassword" });
             }
         },
+        handleUserHistoryClick(){
+            this.$router.push({ name: "UserHistory" });
+        }
     },
   };
   </script>

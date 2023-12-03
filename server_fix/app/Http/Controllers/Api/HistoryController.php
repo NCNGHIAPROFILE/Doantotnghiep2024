@@ -28,7 +28,7 @@ class HistoryController extends Controller
             return response()->json([
                 'status' => 200,
                 'Recoure' => $historysCount,
-                'Historys' => $historys
+                'historys' => $historys
             ], 200);
         } else {
             return response()->json([
@@ -87,7 +87,7 @@ class HistoryController extends Controller
                 $historys = History::create($dataCreate);
                 return response()->json([
                     'status' => 201,
-                    'message' => "Historys Created successfully!",
+                    'message' => "historys Created successfully!",
                     'historys' => $historys
                 ], 201);
             }
@@ -111,14 +111,14 @@ class HistoryController extends Controller
             if($detail_History){
                 return response()->json([
                     'status' => 200,
-                    'message' => "Historys View Detail Successfully!",
+                    'message' => "historys View Detail Successfully!",
                     'historys' => $detail_History
                 ], 200);
             }
             else{
                 return response()->json([
                     'status' => 400,
-                    'message' => "Historys View Detail Failed! Because historys do not exist!"
+                    'message' => "historys View Detail Failed! Because historys do not exist!"
                 ], 400);
             }
         } else {
@@ -148,13 +148,13 @@ class HistoryController extends Controller
             if ($affectedRows > 0) {
                 return response()->json([
                     'status' => 200,
-                    'message' => "Historys Deleted Successfully",
+                    'message' => "historys Deleted Successfully",
                 ], 200);
             }  
             else {
                 return response()->json([
                     'status' => 500,
-                    'message' => "Historys Deleted Failed!",
+                    'message' => "historys Deleted Failed!",
                 ], 500);
             }
         } else {
@@ -175,7 +175,7 @@ class HistoryController extends Controller
             if($historys){
                 return response()->json([
                     'status' => 200,
-                    'message' => "Historys Search Successfully",
+                    'message' => "historys Search Successfully",
                     'Resource' => $historysCount,
                     'historys' => $historys
                 ], 200);
@@ -183,7 +183,7 @@ class HistoryController extends Controller
             else{
                 return response()->json([
                     'status' => 400,
-                    'message' => "Historys Search Failed!"
+                    'message' => "historys Search Failed!"
                 ], 200);
             }
         } else {
@@ -212,14 +212,14 @@ class HistoryController extends Controller
             if($historysCount){
                 return response()->json([
                     'status' => 200,
-                    'message' => "Historys Search Successfully",
+                    'message' => "historys Search Successfully",
                     'Resource' => $historysCount,
                     'historys' => $historys
                 ], 200);
             }
             return response()->json([
                 'status' => 400,
-                'message' => "Historys Search Failed!"
+                'message' => "historys Search Failed!"
             ], 400);
         } else {
             return response()->json([
