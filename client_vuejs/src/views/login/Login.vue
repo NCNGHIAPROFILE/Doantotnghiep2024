@@ -39,11 +39,20 @@
                   ></v-text-field>
                   <div class="text-center">
                     <v-btn
-                      color="blue-grey"
+                      color="error"
                       Raised
                       width="300"
                       @click="login"
-                      >Login
+                      >Đăng nhập
+                    </v-btn>
+                  </div>
+                  <div class="text-center">
+                    <v-btn
+                      color="blue-grey"
+                      Raised
+                      width="300"
+                      @click="register"
+                      >Đăng ký
                     </v-btn>
                   </div>
                 </v-form>
@@ -105,6 +114,9 @@ export default {
         .catch(() => {})
         .finally(() => {
         });
+    },
+    register() {
+      this.$router.push({ name: "Register" });
     },
   },
 };

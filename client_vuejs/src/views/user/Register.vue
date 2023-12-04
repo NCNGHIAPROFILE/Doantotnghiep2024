@@ -92,7 +92,10 @@
                       required
                     ></v-text-field>
                     <div class="text-center">
-                      <v-btn color="blue-grey" Raised width="300" @click="register">Send OTP</v-btn>
+                      <v-btn color="error" Raised width="300" @click="register">Send OTP</v-btn>
+                    </div>
+                    <div class="text-center">
+                      <v-btn color="blue-grey" Raised width="300" @click="back">Back</v-btn>
                     </div>
                   </v-form>
                 </transition>
@@ -189,6 +192,9 @@
         else {
           this.error = "Lỗi email không trùng với MSSV";
         }
+      },
+      back(){
+        this.$router.push({ name: "Login" });
       },
     },
   };

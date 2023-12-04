@@ -121,7 +121,7 @@
     data() {
       return {
         userName: "Hello Admin",
-        drawer: false,
+        drawer: true,
         data: {},
         loading: false,
         selectedFile: null,
@@ -194,6 +194,9 @@
           .catch(() => {})
           .finally(() => {
           });
+        },
+        handleAddNew(){
+          this.$router.push({ name: "UserForm" });
         },
         handleMenuItemClick(item) {
             if (item == 1){

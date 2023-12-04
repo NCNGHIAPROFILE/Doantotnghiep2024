@@ -10,6 +10,8 @@ import UserListTicketCreate from "@/views/user/UserListTicketCreate.vue";
 import UserListTicketAccpet from "@/views/user/UserListTicketAccpet.vue";
 import UserListTicketGiveback from "@/views/user/UserListTicketGiveback.vue";
 import UserHistory from "@/views/user/UserHistory.vue";
+import UserForm from "@/views/user/Form.vue";
+
 import AdminListTicketCreate from "@/views/admin/ListTicket.vue";
 import AdminListTicketAccpet from "@/views/admin/LictTicketAcpect.vue";
 import AdminListTicketGiveback from "@/views/admin/ListTicketGiveback.vue";
@@ -60,6 +62,12 @@ const routes = [{
       name: 'Home',
       component: Home,
       meta: { title: 'Home' }
+    },
+    {
+      path: '/user-form',
+      name: 'UserForm',
+      component: UserForm,
+      meta: { title: 'UserForm' }
     },
     {
       path: '/user-download',
