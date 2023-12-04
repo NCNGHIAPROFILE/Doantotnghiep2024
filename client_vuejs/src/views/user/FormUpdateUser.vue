@@ -234,7 +234,7 @@
         ],
         Rulesmssv: [
             (v) => !!v || 'Mã số sinh viên is required',
-            (v) => v.length <= 10 || 'Mã số sinh viên must be 10 characters',
+            (v) => v.length == 10 || 'Mã số sinh viên must be 10 characters',
         ],
         Rulesclassuser: [
             (v) => !!v || 'Class is required',
@@ -244,7 +244,7 @@
             (v) => v.length <= 255 || 'LastName must be less than 255 characters',
         ],
         Rulesphone: [
-            (v) => v.length <= 10 || 'Phone must be 10 characters',
+            (v) => v.length == 10 || 'Phone must be 10 characters',
         ],
         // emailRules: [
         //     (v) => (v.endsWith("@dau.edu.vn") || !v) || "Email must end with @dau.edu.vn",
@@ -272,7 +272,7 @@
             formData.append('Phone', this.params.phone);
             formData.append('password', this.params.password);
             formData.append('ImageUser', this.params.avatar);
-            Request.post("Users/UpdateUser/634", formData)
+            Request.post("Users/UpdateUser/2", formData)
             .then(response => {
                 console.log('Update successful:', response.data);
                 this.$router.push({ name: "ListUser" });
@@ -293,7 +293,7 @@
             });
         },
         getData() {
-            Request.get("Users/ShowUser/634")
+            Request.get("Users/ShowUser/2")
             .then((response) => {
                 if (response.data.status === 200) {
                     this.params = response.data.users;

@@ -43,9 +43,7 @@ class BookController extends Controller
         $check = auth()->check();
         if($check){
             $dataCreate = $request->all();
-            $user = auth()->user();
-            // $get_image = $request->file('Picture');
-            $get_image = "OKOK";
+            $user = JWTAuth::parseToken()->authenticate();
             $get_date = Carbon::now();
             $dataBook = Book::where('NameBook', $dataCreate['NameBook'])->where('Author', $dataCreate['Author']);
             if ($dataBook->exists()) {
@@ -63,6 +61,10 @@ class BookController extends Controller
             } else {
                 $avatarPath = null;
             }
+            $dataCreate['Type'] = 0;
+            $dataCreate['Status'] = $request->Status;
+            $dataCreate['Sum_Quantity'] = $request->Sum_Quantity;
+            $dataCreate['Quantity'] = $request->Sum_Quantity;
             $dataCreate['Picture'] = $avatarPath;
             $dataCreate['YearPublish'] = $get_date;
             $books = $this->books->create($dataCreate);
@@ -143,23 +145,6 @@ class BookController extends Controller
     {
         $check = auth()->check();
         if($check){
-            // $data = Book::select('NameBook', 'Author', 'Category', 'Type', 'MaProducer', 'YearPublish',
-            //         'Quantity', 'Content', 'Status', 'Picture', 'Sum_Quantity')->get();
-            // $getData = $data->map(function ($item) {
-            //     return [
-            //         'NameBook' => $item->NameBook,
-            //         'Author' => $item->Author,
-            //         'Category' => $item->Category,
-            //         'Type' => $item->Type,
-            //         'MaProducer' => $item->MaProducer,
-            //         'YearPublish' => $item->YearPublish,
-            //         'Quantity' => $item->Quantity,
-            //         'Content' => $item->Content,
-            //         'Status' => $item->Status,
-            //         'Picture' => $item->Picture,
-            //         'Sum_Quantity' => $item->Sum_Quantity
-            //     ];
-            // });
             $books = Book::select('Status')->where('id', $id)->where('Status', '=', '0')->get();
             if($books->count() > 0){
                 $books = array();

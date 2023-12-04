@@ -234,7 +234,7 @@
         ],
         Rulesmssv: [
             (v) => !!v || 'Mã số sinh viên is required',
-            (v) => v.length <= 10 || 'Mã số sinh viên must be 10 characters',
+            (v) => v.length == 10 || 'Mã số sinh viên must be 10 characters',
         ],
         Rulesclassuser: [
             (v) => !!v || 'Class is required',
@@ -244,7 +244,7 @@
             (v) => v.length <= 255 || 'LastName must be less than 255 characters',
         ],
         Rulesphone: [
-            (v) => v.length <= 10 || 'Phone must be 10 characters',
+            (v) => v.length == 10 || 'Phone must be 10 characters',
         ],
         // emailRules: [
         //     (v) => (v.endsWith("@dau.edu.vn") || !v) || "Email must end with @dau.edu.vn",

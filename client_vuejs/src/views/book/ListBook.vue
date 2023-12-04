@@ -4,7 +4,7 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 
       <v-toolbar-title class="mr-6">List Sách giấy</v-toolbar-title>
-      <v-btn class="ma-2" color="#90CAF9" >
+      <v-btn class="ma-2" color="#90CAF9" @click="handleAddNew()">
         <span class="mdi mdi-book-plus"></span>Thêm mới</v-btn>
       <v-spacer></v-spacer>
 
@@ -102,7 +102,7 @@
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <div>
-          <v-btn color="primary" @click="update(item)"> Update </v-btn>
+          <v-btn color="primary" @click="update()"> Update </v-btn>
           <v-btn color="warning" @click="remove(item)"> Remove </v-btn>
         </div>
       </template>
@@ -156,11 +156,16 @@ export default {
       Request.get("Books/ListBookBasic")
         .then((response) => {
           this.data = response.data;
-          console.log("kjkkjkjk");
           console.log(response);
         })
         .catch(() => {})
         .finally(() => {});
+    },
+    handleAddNew(){
+      this.$router.push({ name: "AdminForm" });
+    },
+    update(){
+      this.$router.push({ name: "FormUpdateAdmin" });
     },
     remove(item) {
       Request.delete("Books/DeleteBook/" + item.id)

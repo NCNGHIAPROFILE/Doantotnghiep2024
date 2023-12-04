@@ -16,6 +16,9 @@ import FormUpdateUser from "@/views/user/FormUpdateUser.vue";
 import AdminListTicketCreate from "@/views/admin/ListTicket.vue";
 import AdminListTicketAccpet from "@/views/admin/LictTicketAcpect.vue";
 import AdminListTicketGiveback from "@/views/admin/ListTicketGiveback.vue";
+import FormUpdateAdmin from "@/views/admin/FormUpdateAdmin.vue";
+import AdminForm from "@/views/admin/Form.vue";
+
 import BookDetail from "@/views/admin/DetailBook.vue";
 import AdminListBook from "@/views/book/ListBook.vue";
 import AdminListBookNumber from "@/views/book/ListBookNumber.vue";
@@ -75,6 +78,18 @@ const routes = [{
       name: 'UserForm',
       component: UserForm,
       meta: { title: 'UserForm' }
+    },
+    {
+      path: '/form-update-admin',
+      name: 'FormUpdateAdmin',
+      component: FormUpdateAdmin,
+      meta: { title: 'FormUpdateAdmin' }
+    },
+    {
+      path: '/admin-form',
+      name: 'AdminForm',
+      component: AdminForm,
+      meta: { title: 'AdminForm' }
     },
     {
       path: '/user-download',

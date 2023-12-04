@@ -18,14 +18,14 @@ return new class extends Migration
             $table->string('Author', 70);
             $table->String('MaAdmin', 20)->nullable();
             $table->string('Category', 70);
-            $table->integer('Type');
+            $table->integer('Type')->nullable();
             $table->integer('MaProducer');
-            $table->date('YearPublish');
+            $table->date('YearPublish')->nullable();
             $table->integer('Quantity')->nullable();
             $table->string('Content', 255)->nullable();
             $table->integer('Status');
             $table->string('Picture', 255)->nullable();
-            $table->integer('Sum_Quantity')->nullable();
+            $table->integer('Sum_Quantity');
         });
     }
 

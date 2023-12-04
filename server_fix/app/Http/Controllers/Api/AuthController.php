@@ -28,7 +28,6 @@ class AuthController extends Controller
         $_SESSION['Email'] = $request->email;
         $_SESSION['Phone'] = $request->phone;
         $_SESSION['Password'] = $request->password;
-        error_log("xxx");
         $this->sendmail($request);
         return ([
             "status" => 200,
