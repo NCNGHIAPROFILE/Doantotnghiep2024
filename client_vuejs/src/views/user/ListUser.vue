@@ -104,11 +104,11 @@
         style="display: block;"
       >
       <template v-slot:[`item.ImageUser`]="{ item }">
-        <v-img :src="'http://127.0.0.1:8000/images/' + item.ImageUser" max-width="100" max-height="100"></v-img>
+        <v-img :src="'http://127.0.0.1:8000/images/' + item.ImageUser" max-width="60" max-height="60"></v-img>
       </template>
         <template v-slot:[`item.actions`]="{ item }">
           <div>
-            <v-btn color="primary" @click="update(item)"> Update </v-btn>
+            <v-btn color="primary" @click="update()"> Update </v-btn>
             <v-btn color="warning" @click="remove(item)"> Remove </v-btn>
           </div>
         </template>
@@ -127,12 +127,13 @@
         selectedFile: null,
         headers: [
           { text: "id", value: "id" },
-          { text: "Picture", value: "ImageUser" },
-          { text: "MaSV", value: "MaSV" },
-          { text: "Name", value: `FistNameUser LastNameUser`},
-          { text: "Class", value: "Class" },
-          { text: "AddressUser", value: "AddressUser" },
-          { text: "Phone", value: "Phone" },
+          { text: "Avatar", value: "ImageUser" },
+          { text: "MSSV", value: "MaSV" },
+          { text: "Họ", value: "FistNameUser"},
+          { text: "Tên", value: "LastNameUser"},
+          { text: "Lớp", value: "Class" },
+          { text: "Địa chỉ", value: "AddressUser" },
+          { text: "SĐT", value: "Phone" },
           { text: "Email", value: "email" },
           { text: "Actions", value: "actions", sortable: false },
         ],
@@ -144,6 +145,20 @@
     methods: {
       onFileChange() {
         console.log("Selected file:", this.selectedFile);
+      },
+      update() {
+        this.$router.push({ name: "FormUpdateUser" });
+      },
+      remove(item) {
+        Request.delete("Users/DeleteUser/" + item.id)
+          .then((response) => {
+            if (response.data.status == 200){
+              window.location.reload();
+              this.getData();
+            }
+          })
+          .catch(() => {})
+          .finally(() => {});
       },
       importUsers() {
         this.loading = true;

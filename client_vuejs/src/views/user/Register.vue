@@ -199,7 +199,6 @@
     },
   };
   </script>
-
   <style src="./template.scss" lang="scss" />
 
   

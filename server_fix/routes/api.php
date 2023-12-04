@@ -59,6 +59,7 @@ Route::group(['middleware' => 'api'], function () {
         Route::post('/Users/AddUser', [UserController::class, 'store']);
         Route::delete('/Users/DeleteUser/{id}', [UserController::class, 'destroy']);
         Route::get('/Users/SearchUser', [UserController::class, 'searchUser']);
+        Route::post('/Users/UpdateUser/{id}', [UserController::class, 'update']);
         Route::post('/ImportUser', [UserController::class, 'import']);
             
         // book

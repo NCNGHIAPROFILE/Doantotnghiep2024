@@ -11,6 +11,7 @@ import UserListTicketAccpet from "@/views/user/UserListTicketAccpet.vue";
 import UserListTicketGiveback from "@/views/user/UserListTicketGiveback.vue";
 import UserHistory from "@/views/user/UserHistory.vue";
 import UserForm from "@/views/user/Form.vue";
+import FormUpdateUser from "@/views/user/FormUpdateUser.vue";
 
 import AdminListTicketCreate from "@/views/admin/ListTicket.vue";
 import AdminListTicketAccpet from "@/views/admin/LictTicketAcpect.vue";
@@ -62,6 +63,12 @@ const routes = [{
       name: 'Home',
       component: Home,
       meta: { title: 'Home' }
+    },
+    {
+      path: '/form-update-user',
+      name: 'FormUpdateUser',
+      component: FormUpdateUser,
+      meta: { title: 'FormUpdateUser' }
     },
     {
       path: '/user-form',

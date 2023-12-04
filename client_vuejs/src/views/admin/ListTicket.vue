@@ -147,7 +147,6 @@ export default {
         .then((response) => {
           console.log(response);
           if (response.data.status == 200){
-             
             this.getData();
           }
         })
@@ -158,7 +157,6 @@ export default {
       Request.delete("Tickets/DeleteTicket/" + item.id)
         .then((response) => {
           if (response.data.status == 200){
-             
             this.getData();
           }
         })

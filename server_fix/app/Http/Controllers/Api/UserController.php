@@ -109,12 +109,12 @@ class UserController extends Controller
     {
         $check = auth()->check();
         if($check){
-            $detail_Users = User::where('id', $id)->first();
-            if($detail_Users){
+            $users = User::where('id', $id)->first();
+            if($users){
                 return response()->json([
                     'status' => 200,
                     'message' => "Users View Detail Successfully!",
-                    'users' => $detail_Users
+                    'users' => $users
                 ], 200);
             }
             else{
@@ -138,14 +138,37 @@ class UserController extends Controller
     {
         $check = auth()->check();
         if($check){
-            $users = User::where('id', $id)->get();
-            if($users->count() > 0){
-                $users = array();
-                $users['AddressUser'] = $request->AddressUser;
-                $users['Phone'] = $request->Phone;
-                $users['password'] = $request->password;
-                $users['ImageUser'] = $request->ImageUser;
-                $udapetUsers = User::where('id', $id)->update($users);
+            $users = User::where('id', $id)->first();
+            if($users){
+                $dataCreate = $request->all();
+                $tmpMSSV = $request->MaSV;
+                $dataCreate['MaSV'] = $tmpMSSV;
+                $dataCreate['FistNameUser'] = $request->FistNameUser;
+                $tmpName = $request->LastNameUser;
+                $dataCreate['LastNameUser'] = $tmpName;
+                if (strstr($tmpName, ' ')) {
+                    return response()->json([
+                        'status' => 500,
+                        'message' => "User Update Failed!",
+                        'users' => $tmpName
+                    ], 500);
+                }
+                $dataCreate['Class'] = $request->Class;
+                $dataCreate['AddressUser'] = $request->AddressUser;
+                $dataCreate['Phone'] = $request->Phone;
+                $name = Str::slug($tmpName, '_');
+                $dataCreate['email'] = $name . "_" . $tmpMSSV . "@dau.edu.vn";
+                $dataCreate['password'] = Hash::make($request->password);
+                if ($request->hasFile('ImageUser')) {
+                    $avatar = $request->file('ImageUser');
+                    $imageName = time() . '.' . $avatar->getClientOriginalExtension();
+                    $avatar->move(public_path('images'), $imageName);
+                    $avatarPath = $imageName;
+                } else {
+                    $avatarPath = null;
+                }
+                $dataCreate['ImageUser'] = $avatarPath;
+                $udapetUsers = User::where('id', $id)->update($dataCreate);
                 return response()->json([
                     'status' => 200,
                     'message' => "Users Update Successfully!",

@@ -3,7 +3,7 @@
       <v-app-bar app color="error">
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
   
-        <v-toolbar-title class="mr-6">Thêm Sách giấy</v-toolbar-title>
+        <v-toolbar-title class="mr-6">Thêm người dùng</v-toolbar-title>
         <v-spacer></v-spacer>
   
         <v-btn class="ma-2" outlined color="#90CAF9" @click="logout">
@@ -76,122 +76,125 @@
       </v-navigation-drawer>
       <v-main>
         <v-form v-model="valid" @submit.prevent="submitForm">
-            <v-container>
-              <v-row>
-                <v-col cols="12" md="4">
-                  <v-text-field
-                    prepend-icon="mdi mdi-rename-outline"
-                    v-model="params.firstname"
-                    :rules="nameRulesFisrt"
-                    :counter="50"
-                    label="First name"
-                    required
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="4">
-                  <v-text-field
-                    prepend-icon="mdi mdi-rename"
-                    v-model="params.lastname"
-                    :rules="nameRulesLast"
-                    :counter="10"
-                    label="Last name"
-                    required
-                  ></v-text-field>
-                </v-col>
-              </v-row>
+          <v-toolbar color="#82B1FF" class="form-toolbar">
+            <v-toolbar-title class="text-center" style="padding-left: 250px; font-weight:bolder;">Thêm người dùng</v-toolbar-title>
+          </v-toolbar>
+          <v-container>
+            <v-row>
+              <v-col cols="12" md="4">
+                <v-text-field
+                  prepend-icon="mdi mdi-rename-outline"
+                  v-model="params.firstname"
+                  :rules="nameRulesFisrt"
+                  :counter="50"
+                  label="First name"
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" md="4">
+                <v-text-field
+                  prepend-icon="mdi mdi-rename"
+                  v-model="params.lastname"
+                  :rules="nameRulesLast"
+                  :counter="10"
+                  label="Last name"
+                  required
+                ></v-text-field>
+              </v-col>
+            </v-row>
 
-              <v-row>
-                <v-col cols="12" md="4">
-                  <v-text-field
-                    prepend-icon="mdi mdi-identifier"
-                    v-model="params.mssv"
-                    :rules="Rulesmssv"
-                    :counter="10"
-                    label="MSSV"
-                    required
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="4">
-                  <v-text-field
-                    prepend-icon="mdi mdi-google-classroom"
-                    v-model="params.classuser"
-                    :rules="Rulesclassuser"
-                    :counter="5"
-                    label="Class"
-                    required
-                  ></v-text-field>
-                </v-col>
-              </v-row>
+            <v-row>
+              <v-col cols="12" md="4">
+                <v-text-field
+                  prepend-icon="mdi mdi-identifier"
+                  v-model="params.mssv"
+                  :rules="Rulesmssv"
+                  :counter="10"
+                  label="MSSV"
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" md="4">
+                <v-text-field
+                  prepend-icon="mdi mdi-google-classroom"
+                  v-model="params.classuser"
+                  :rules="Rulesclassuser"
+                  :counter="5"
+                  label="Class"
+                  required
+                ></v-text-field>
+              </v-col>
+            </v-row>
 
-              <v-row>
-                <v-col cols="12" md="4">
-                  <v-text-field
-                    prepend-icon="mdi mdi-map-marker-outline"
-                    v-model="params.address"
-                    :rules="Rulesaddress"
-                    :counter="255"
-                    label="Address"
-                    required
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="4">
-                  <v-text-field
-                    prepend-icon="mdi mdi-phone-forward"
-                    v-model="params.phone"
-                    :rules="Rulesphone"
-                    :counter="10"
-                    label="Phone"
-                    required
-                  ></v-text-field>
-                </v-col>
-              </v-row>
+            <v-row>
+              <v-col cols="12" md="4">
+                <v-text-field
+                  prepend-icon="mdi mdi-map-marker-outline"
+                  v-model="params.address"
+                  :rules="Rulesaddress"
+                  :counter="255"
+                  label="Address"
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" md="4">
+                <v-text-field
+                  prepend-icon="mdi mdi-phone-forward"
+                  v-model="params.phone"
+                  :rules="Rulesphone"
+                  :counter="10"
+                  label="Phone"
+                  required
+                ></v-text-field>
+              </v-col>
+            </v-row>
 
-              <v-row>
-                <!-- <v-col cols="12" md="4">
-                    <v-text-field
-                    prepend-icon="mdi mdi-email"
-                    class="text-field-email"
-                    placeholder="Email address"
-                    type="email"
-                    v-model="params.email"
-                    :rules="emailRules"
-                    required
-                    height="30px"
-                  ></v-text-field>
-                </v-col> -->
-                <v-col cols="12" md="4">
-                    <v-text-field
-                    class="text-field-password"
-                    placeholder="Password"
-                    prepend-icon="mdi mdi-lock-off"
-                    :append-icon="passwordShow ? 'mdi-eye ic-eye' : 'mdi-eye-off ic-eye'"
-                    :type="passwordShow ? 'text' : 'password'"
-                    dense
-                    height="42px"
-                    @click:append="passwordShow = !passwordShow"
-                    v-model="params.password"
-                    :rules="passwordRules"
-                    required
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="4">
-                    <v-file-input
-                        v-model="params.avatar"
-                        label="Avatar"
-                        show-size
-                        required
-                    ></v-file-input>
-                </v-col>
-              </v-row>
-                <div class="text-center">
-                    <v-btn
-                        color="error"
-                        Raised
-                        width="300"
-                        type="submit"
-                        >Tạo mới
-                    </v-btn>
-                </div>
+            <v-row>
+              <!-- <v-col cols="12" md="4">
+                  <v-text-field
+                  prepend-icon="mdi mdi-email"
+                  class="text-field-email"
+                  placeholder="Email address"
+                  type="email"
+                  v-model="params.email"
+                  :rules="emailRules"
+                  required
+                  height="30px"
+                ></v-text-field>
+              </v-col> -->
+              <v-col cols="12" md="4">
+                  <v-text-field
+                  class="text-field-password"
+                  placeholder="Password"
+                  prepend-icon="mdi mdi-lock-off"
+                  :append-icon="passwordShow ? 'mdi-eye ic-eye' : 'mdi-eye-off ic-eye'"
+                  :type="passwordShow ? 'text' : 'password'"
+                  dense
+                  height="42px"
+                  @click:append="passwordShow = !passwordShow"
+                  v-model="params.password"
+                  :rules="passwordRules"
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" md="4">
+                  <v-file-input
+                      v-model="params.avatar"
+                      label="Avatar"
+                      show-size
+                      required
+                  ></v-file-input>
+              </v-col>
+            </v-row>
+              <div class="text-center">
+                  <v-btn
+                      color="error"
+                      Raised
+                      width="300"
+                      type="submit"
+                      >Tạo mới
+                  </v-btn>
+              </div>
             </v-container>
           </v-form>
       </v-main>
@@ -231,19 +234,17 @@
         ],
         Rulesmssv: [
             (v) => !!v || 'Mã số sinh viên is required',
-            (v) => v.length = 10 || 'Mã số sinh viên must be 10 characters',
+            (v) => v.length <= 10 || 'Mã số sinh viên must be 10 characters',
         ],
         Rulesclassuser: [
             (v) => !!v || 'Class is required',
             (v) => v.length <= 5 || 'FisrtName must be less than 5 characters',
         ],
         Rulesaddress: [
-            (v) => !!v || 'LastName is required',
             (v) => v.length <= 255 || 'LastName must be less than 255 characters',
         ],
         Rulesphone: [
-            (v) => !!v || 'Phone is required',
-            (v) => v.length = 10 || 'Phone must be 10 characters',
+            (v) => v.length <= 10 || 'Phone must be 10 characters',
         ],
         // emailRules: [
         //     (v) => (v.endsWith("@dau.edu.vn") || !v) || "Email must end with @dau.edu.vn",
@@ -251,8 +252,8 @@
         //     (v) => /.+@.+\..+/.test(v) || this.emailInValid,
         // ],
         passwordRules: [
-            (v) => !!v || this.passwordRequired,
-            (v) => (v && v.length >= 8) || this.passwordMaxLength,
+            (v) => !!v || 'Password is required',
+            (v) => v.length >= 8 && v.length <= 255 || 'Phone must be less than 8 characters',
         ],
       };
     },
@@ -291,7 +292,7 @@
             });
         },
         getData() {
-            Request.get("Books/ListBookBasic")
+          Request.get("Users/ListUser")
             .then((response) => {
                 this.data = response.data;
                 console.log(response);
@@ -326,6 +327,10 @@
   <style>
   .inline {
     display: flex;
+  }
+  .form-toolbar{
+    width: 67%;
+    text-align: center;
   }
   </style>
   
