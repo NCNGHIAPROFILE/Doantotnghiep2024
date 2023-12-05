@@ -3,7 +3,7 @@
       <v-app-bar app color="error">
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
   
-        <v-toolbar-title class="mr-6">Danh sách sách số</v-toolbar-title>
+        <v-toolbar-title class="mr-6">Chi tiết sách số</v-toolbar-title>
   
         <v-text-field
           v-model="search"
@@ -29,12 +29,12 @@
         <v-btn class="ma-2" outlined color="#90CAF9" @click="onSearch()"> Search </v-btn>
         <v-spacer></v-spacer>
   
-        <v-btn class="ma-2" outlined color="#90CAF9" @click="logout">
+        <v-btn class="ma-2" outlined color="#90CAF9" @click="logout()">
           <span class="mdi mdi-logout"></span>
           Logout</v-btn>
       </v-app-bar>
       
-      <v-main style="display: block;">
+      <!-- <v-main style="display: block;">
         <v-row class="content-wrapper">
           <v-col v-for="(book, index) in displayedBooks" :key="book.id || index" cols="12" sm="4" md="4" lg="3" xl="3">
             <v-card style="padding-left: 10px; padding-right: 10px;" height="100%">
@@ -59,8 +59,47 @@
             <v-pagination v-model="currentPage" :length="totalPages" @input="changePage"></v-pagination>
           </v-col>
         </v-row>
+      </v-main> -->
+
+      <v-main style="display: block;">
+        <v-card class="mx-auto" max-width="600">
+            <v-img
+            class="align-end text-white"
+            height="300"
+            src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+            cover
+            >
+                <v-row class="fill-height align-end">
+                    <v-col>
+                        <v-card-title :style="{ fontSize: '26px', fontWeight: 'bold' }" class="white--text">
+                            Trí tuệ nhân tạo ???
+                        </v-card-title>
+                    </v-col>
+                </v-row>
+            </v-img>
+
+            <v-card-text>
+                <v-row>
+                    <v-col>
+                        <v-divider class="my-3"></v-divider>
+                        <div class="headline">
+                            <strong>Tác giả:</strong> Nghĩa
+                        </div>
+                        <div class="subheading">
+                            <strong>Xuất bản năm</strong> 14/02/2015
+                        </div>
+                    </v-col>
+                </v-row>
+            </v-card-text>
+
+            <v-card-actions>
+            <v-btn color="error" @click="explore">Download Book</v-btn>
+            </v-card-actions>
+        </v-card>
       </v-main>
-      <v-navigation-drawer v-model="drawer" app color="#90CAF9">
+
+
+      <v-navigation-drawer temporary v-model="drawer" app color="#90CAF9">
         <v-list-item>
           <v-list-item-content class="pa-2">
             <v-list-item-title class="text-h2 font-weight-bold">{{ userName }}</v-list-item-title>
@@ -111,7 +150,7 @@
           </v-list-item>
           <v-list-item>
             <span class="mdi mdi-file-download"></span>
-            <v-btn text>Lịch sử tải xuống</v-btn>
+            <v-btn text @click="handleUserHistoryClick()">Lịch sử tải xuống</v-btn>
           </v-list-item>
           <v-list-item>
             <span class="mdi mdi-account-cog"></span>
@@ -156,52 +195,45 @@
       this.getListBook();
     },
     methods: {
+      logout() {
+        Request.post("logout")
+        .then(response => {
+            console.log(response.data);
+            this.$router.push('/login');
+        })
+        .catch(error => {
+            console.error('Logout error:', error);
+        });
+      },
       handleMenuItemClick(item) {
         if (item == 1){
-           
           this.$router.push({ name: "UserListTicketCreate" });
         }else if (item == 2){
-           
           this.$router.push({ name: "UserListTicketAccpet" });
         }else if (item == 3){
-           
           this.$router.push({ name: "UserListTicketGiveback" });
         }
       },
       handleMenuItemClickBook(item) {
         if (item == 1){
-           
-          this.$router.push({ name: "Home" });
+            this.$router.push({ name: "Home" });
         }else if (item == 2){
-           
-          this.$router.push({ name: "UserListBookNumber" });
+            this.$router.push({ name: "UserListBookNumber" });
         }
       },
       handleUserItemClick(item) {
         if (item == 1){
-           
           this.$router.push({ name: "UserInfo" });
         }else if (item == 2){
-           
           this.$router.push({ name: "UserPassword" });
         }
       },
-      logout() {
-        Request.post("logout")
-        .then(response => {
-            console.log(response.data);
-             
-            this.$router.push('/login');
-          })
-          .catch(error => {
-             
-            console.error('Logout error:', error);
-          });
+      handleUserHistoryClick(){
+        this.$router.push({ name: "UserHistory" });
       },
       getListBook() {
         this.loading = true;
-         
-        Request.get("Books/ListBookNumber")
+        Request.get("Books/ListBookBasic")
           .then((response) => {
             this.books = response.data.books;
             console.log(response);
@@ -254,10 +286,9 @@
       },
       changePage(page) {
           this.currentPage = page;
-           
         },
       viewDetails(book) {
-        this.$router.push({ name: "BookDetailDownload" });
+        // this.$router.push('/login');
         console.log(`View details of book: ${book.NameBook}`);
       },
   
@@ -293,6 +324,15 @@
   }
   .search-field {
     max-width: 300px;
+  }
+  .headline {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  .subheading {
+    font-size: 16px;
+    margin-top: 5px;
   }
   </style>
   

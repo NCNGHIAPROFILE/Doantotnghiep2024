@@ -20,6 +20,9 @@ import FormUpdateAdmin from "@/views/admin/FormUpdateAdmin.vue";
 import AdminForm from "@/views/admin/Form.vue";
 
 import BookDetail from "@/views/admin/DetailBook.vue";
+import BookDetailMuon from "@/views/admin/BookDetailMuon.vue";
+import BookDetailDownload from "@/views/admin/BookDetailDownload.vue";
+
 import AdminListBook from "@/views/book/ListBook.vue";
 import AdminListBookNumber from "@/views/book/ListBookNumber.vue";
 import Footer from "@/views/dashboarch/Footer.vue";
@@ -29,7 +32,7 @@ import ListUser from "@/views/user/ListUser.vue";
 // import OTP from "@/views/user/otp.vue";
 import VerifyOTP from "@/views/user/Verify_OTP.vue";
 import Register from "@/views/user/Register.vue";
-
+import Test from "@/views/ticket/test.vue";
 
 import Layout from '@/components/layout/Layout.vue';
 
@@ -72,6 +75,18 @@ const routes = [{
       name: 'FormUpdateUser',
       component: FormUpdateUser,
       meta: { title: 'FormUpdateUser' }
+    },
+    {
+      path: '/view-book-ticket',
+      name: 'BookDetailMuon',
+      component: BookDetailMuon,
+      meta: { title: 'BookDetailMuon' }
+    },
+    {
+      path: '/view-book-download',
+      name: 'BookDetailDownload',
+      component: BookDetailDownload,
+      meta: { title: 'BookDetailDownload' }
     },
     {
       path: '/user-form',
@@ -191,7 +206,12 @@ const routes = [{
   {
     path: '*',
     redirect: { name: 'PageNotFound' }
-  }
+  },
+  {
+    path: '/test',
+    name: 'Test',
+    component: Test
+  },
 ]
 
 const router = new VueRouter({

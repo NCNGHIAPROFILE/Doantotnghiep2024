@@ -249,7 +249,7 @@ export default {
         this.currentPage = page;
       },
     viewDetails(book) {
-      // this.$router.push('/login');
+      this.$router.push({ name: "BookDetailMuon" });
       console.log(`View details of book: ${book.NameBook}`);
     },
 
