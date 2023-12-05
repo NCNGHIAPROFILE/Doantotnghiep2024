@@ -77,7 +77,7 @@ class HistoryController extends Controller
     {
         $check = auth()->check();
         if($check){
-            $user = auth()->user();
+            $user = JWTAuth::parseToken()->authenticate();
             $book = Book::where('id', $id)->first();
             if( $book ){
                 $get_date = Carbon::now();

@@ -134,11 +134,11 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
         $check = auth()->check();
         if($check){
-            $users = User::where('id', $id)->first();
+            $users = User::find($id);
             if($users){
                 $dataCreate = $request->all();
                 $tmpMSSV = $request->MaSV;
@@ -168,7 +168,7 @@ class UserController extends Controller
                     $avatarPath = null;
                 }
                 $dataCreate['ImageUser'] = $avatarPath;
-                $udapetUsers = User::where('id', $id)->update($dataCreate);
+                $udapetUsers = $users->update($dataCreate);
                 return response()->json([
                     'status' => 200,
                     'message' => "Users Update Successfully!",

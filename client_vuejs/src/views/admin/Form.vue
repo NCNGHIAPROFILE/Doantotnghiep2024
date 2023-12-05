@@ -76,10 +76,10 @@
       </v-navigation-drawer>
       <v-main>
         <v-form v-model="valid" @submit.prevent="submitForm">
-          <v-toolbar color="#82B1FF" class="form-toolbar">
-            <v-toolbar-title class="text-center" style="padding-left: 250px; font-weight:bolder;">Thêm sách giấy</v-toolbar-title>
-          </v-toolbar>
           <v-container>
+            <v-toolbar color="#82B1FF" class="form-toolbar">
+              <v-toolbar-title class="text-center" style="justify-content: center; font-weight:bolder;">Thêm sách giấy</v-toolbar-title>
+            </v-toolbar>
             <v-row>
               <v-col cols="12" md="4">
                 <v-text-field
@@ -138,40 +138,26 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="4">
-                <v-select
-                    prepend-icon="mdi mdi-list-status"
-                    v-model="params.status"
-                    :items="params.options"
-                    item-text="displayText"
-                    item-value="dbValue"
-                    :rules="Rulesstatus"
-                    :value="getStatusText()"
-                    label="Trạng thái"
-                    required
-                ></v-select>
+                <v-text-field
+                  prepend-icon="mdi mdi-sigma"
+                  v-model="params.sum_quantity"
+                  :rules="Rulessum_quantity"
+                  label="Tổng số sách"
+                  required
+                ></v-text-field>
               </v-col>
             </v-row>
-
             <v-row>
-                <v-col cols="12" md="4">
-                  <v-text-field
-                    prepend-icon="mdi mdi-sigma"
-                    v-model="params.sum_quantity"
-                    :rules="Rulessum_quantity"
-                    label="Tổng số sách"
-                    required
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="4">
-                    <v-file-input
-                        v-model="params.avatar"
-                        label="Avatar"
-                        show-size
-                        required
-                    ></v-file-input>
-                </v-col>
-              </v-row>
-              <div class="text-center">
+              <v-col cols="12" md="4">
+                  <v-file-input
+                      v-model="params.avatar"
+                      label="Avatar"
+                      show-size
+                      required
+                  ></v-file-input>
+              </v-col>
+              <v-col cols="12" md="4">
+                <div class="text-center">
                   <v-btn
                       color="error"
                       Raised
@@ -179,7 +165,9 @@
                       type="submit"
                       >Thêm mới
                   </v-btn>
-              </div>
+                </div>
+              </v-col>
+            </v-row>
             </v-container>
           </v-form>
       </v-main>
@@ -232,9 +220,6 @@
             (v) => !!v || 'Producer is required',
             (v) => v.length <= 255 || 'Producer must be less than 255 characters',
         ],
-        Rulesstatus: [
-            (v) => !!v || 'Status is required'
-        ],
         Rulessum_quantity: [
             (v) => !!v || 'Quantity is required',
         ],
@@ -251,13 +236,13 @@
         formData.append('Content', this.params.content);
         formData.append('Category', this.params.category);
         formData.append('MaProducer', this.params.producer);
-        formData.append('Status', this.params.status);
         formData.append('Sum_Quantity', this.params.sum_quantity);
         formData.append('Picture', this.params.avatar);
         Request.post("Books/AddBook", formData)
             .then(response => {
-                console.log('Add book successful:', response.data);
+              if (response.data.status == 201){
                 this.$router.push({ name: "AdminListBook" });
+              }
             })
             .catch(error => {
                 console.error('Registration error:', error.response.data);
@@ -317,7 +302,12 @@
   }
   .form-toolbar{
     width: 67%;
-    text-align: center;
+    justify-content: center;
+    display: flex;
+    position: relative;
+    z-index: 0;
+    justify-content: center;
+    align-items: center; 
   }
   </style>
   

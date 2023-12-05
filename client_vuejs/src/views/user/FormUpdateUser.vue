@@ -68,18 +68,14 @@
             <span class="mdi mdi-account-key"></span>
             <v-btn text>Account</v-btn>
           </v-list-item>
-          <v-list-item>
-            <span class="mdi mdi-information"></span>
-            <v-btn text>About</v-btn>
-          </v-list-item>
         </v-list-item-group>
       </v-navigation-drawer>
       <v-main>
         <v-form v-model="valid" @submit.prevent="submitForm">
-          <v-toolbar color="#82B1FF" class="form-toolbar">
-            <v-toolbar-title class="text-center" style="padding-left: 250px; font-weight:bolder;">Cập nhật người dùng</v-toolbar-title>
-          </v-toolbar>
           <v-container>
+            <v-toolbar color="#82B1FF" class="form-toolbar">
+              <v-toolbar-title class="text-center" style="justify-content: center; font-weight:bolder;">Cập nhật người dùng</v-toolbar-title>
+            </v-toolbar>
             <v-row>
               <v-col cols="12" md="4">
                 <v-text-field
@@ -213,17 +209,18 @@
         valid: false,
         passwordShow: false,
         params: {
-            firstname: "",
-            lastname: "",
-            mssv: "",
-            address: "",
-            classuser: "",
-            phone: "",
-            // email:"",
-            password: "",
-            avatar: "",
+          id: "",
+          firstname: "",
+          lastname: "",
+          mssv: "",
+          address: "",
+          classuser: "",
+          phone: "",
+          // email:"",
+          password: "",
+          avatar: "",
         },
-        pleaseSignIn: "Thêm người dùng",
+        pleaseSignIn: "Cập nhật người dùng",
         nameRulesLast: [
             (v) => !!v || 'LastName is required',
             (v) => v.length <= 10 || 'LastName must be less than 10 characters',
@@ -258,29 +255,30 @@
       };
     },
     created() {
-        console.log(this.$route.params.id);
+        console.log(this.params.id);
         this.getData();
     },
     methods: {
         submitForm() {
-            const formData = new FormData();
-            formData.append('MaSV', this.params.mssv);
-            formData.append('FistNameUser', this.params.firstname);
-            formData.append('LastNameUser', this.params.lastname);
-            formData.append('Class', this.params.classuser);
-            formData.append('AddressUser', this.params.address);
-            formData.append('Phone', this.params.phone);
-            formData.append('password', this.params.password);
-            formData.append('ImageUser', this.params.avatar);
-            Request.post("Users/UpdateUser/2", formData)
-            .then(response => {
-                console.log('Update successful:', response.data);
-                this.$router.push({ name: "ListUser" });
-            })
-            .catch(error => {
-                console.error('Update error:', error.response.data);
-                this.$router.push({ name: "PageNotFound" });
-            });
+          const formData = new FormData();
+          formData.append('id', this.params.id);
+          formData.append('MaSV', this.params.mssv);
+          formData.append('FistNameUser', this.params.firstname);
+          formData.append('LastNameUser', this.params.lastname);
+          formData.append('Class', this.params.classuser);
+          formData.append('AddressUser', this.params.address);
+          formData.append('Phone', this.params.phone);
+          formData.append('password', this.params.password);
+          formData.append('ImageUser', this.params.avatar);
+          Request.put(`/Users/UpdateUser/${this.params.id}`, formData)        
+          .then(response => {
+            console.log('Update successful:', response.data);
+            this.$router.push({ name: "ListUser" });
+          })
+          .catch(error => {
+              console.error('Update error:', error.response.data);
+              this.$router.push({ name: "PageNotFound" });
+          });
         },
         logout() {
             Request.post("logout")
@@ -293,7 +291,7 @@
             });
         },
         getData() {
-            Request.get("Users/ShowUser/2")
+            Request.get(`Users/ShowUser/${this.params.id}`)
             .then((response) => {
                 if (response.data.status === 200) {
                     this.params = response.data.users;
@@ -343,7 +341,12 @@
   }
   .form-toolbar{
     width: 67%;
-    text-align: center;
+    justify-content: center;
+    display: flex;
+    position: relative;
+    z-index: 0;
+    justify-content: center;
+    align-items: center; 
   }
   </style>
   

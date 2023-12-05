@@ -62,7 +62,7 @@ class BookController extends Controller
                 $avatarPath = null;
             }
             $dataCreate['Type'] = 0;
-            $dataCreate['Status'] = $request->Status;
+            $dataCreate['Status'] = 0;
             $dataCreate['Sum_Quantity'] = $request->Sum_Quantity;
             $dataCreate['Quantity'] = $request->Sum_Quantity;
             $dataCreate['Picture'] = $avatarPath;
@@ -151,11 +151,8 @@ class BookController extends Controller
                 $books['NameBook'] = $request->NameBook;
                 $books['Author'] = $request->Author;
                 $books['Category'] = $request->Category;
-                $books['Type'] = $request->Type;
                 $books['MaProducer'] = $request->MaProducer;
-                $books['Quantity'] = $request->Quantity;
                 $books['Content'] = $request->Content;
-                $books['Status'] = $request->Status;
                 $books['Picture'] = $request->Picture;
                 $books['Sum_Quantity'] = $request->Sum_Quantity;
                 $udapetBook = Book::where('id', $id)->update($books);

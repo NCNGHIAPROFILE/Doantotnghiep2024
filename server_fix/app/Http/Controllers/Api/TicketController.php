@@ -119,7 +119,7 @@ class TicketController extends Controller
     {
         $check = auth()->check();
         if($check) {
-            $user = auth()->user();
+            $user = JWTAuth::parseToken()->authenticate();
             $recordUser = User::where('MaSV', $user->MaSV)->first();
             $books = Book::where('id', $id)->first();
             if($recordUser && $books){

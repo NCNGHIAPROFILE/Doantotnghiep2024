@@ -76,10 +76,10 @@
       </v-navigation-drawer>
       <v-main>
         <v-form v-model="valid" @submit.prevent="submitForm">
-          <v-toolbar color="#82B1FF" class="form-toolbar">
-            <v-toolbar-title class="text-center" style="padding-left: 250px; font-weight:bolder;">Thêm người dùng</v-toolbar-title>
-          </v-toolbar>
           <v-container>
+            <v-toolbar color="#82B1FF" class="form-toolbar">
+              <v-toolbar-title class="text-center" style="justify-content: center; font-weight:bolder;">Thêm người dùng</v-toolbar-title>
+            </v-toolbar>
             <v-row>
               <v-col cols="12" md="4">
                 <v-text-field
@@ -213,15 +213,15 @@
         valid: false,
         passwordShow: false,
         params: {
-            firstname: "",
-            lastname: "",
-            mssv: "",
-            address: "",
-            classuser: "",
-            phone: "",
-            // email:"",
-            password: "",
-            avatar: "",
+          firstname: "",
+          lastname: "",
+          mssv: "",
+          address: "",
+          classuser: "",
+          phone: "",
+          // email:"",
+          password: "",
+          avatar: "",
         },
         pleaseSignIn: "Thêm người dùng",
         nameRulesLast: [
@@ -330,7 +330,12 @@
   }
   .form-toolbar{
     width: 67%;
-    text-align: center;
+    justify-content: center;
+    display: flex;
+    position: relative;
+    z-index: 0;
+    justify-content: center;
+    align-items: center; 
   }
   </style>
   

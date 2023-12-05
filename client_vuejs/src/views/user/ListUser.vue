@@ -15,7 +15,9 @@
             @change="onFileChange"
           ></v-file-input>
 
-          <v-btn style="color: red; background-color:#90CAF9" @click="importUsers" :disabled="!selectedFile">Import Users</v-btn>
+          <v-btn style="color: red; background-color:#90CAF9" @click="importUsers" :disabled="!selectedFile">
+            <span class="mdi mdi-cloud-upload-outline" style="padding-right: 10px;"></span>
+            Import Users</v-btn>
           <v-spacer></v-spacer>
 
         <v-btn class="ma-2" outlined color="#90CAF9" @click="logout()">
@@ -82,7 +84,7 @@
           </v-list-item>
           <v-list-item>
             <span class="mdi mdi-information"></span>
-            <v-btn text>About</v-btn>
+            <v-btn text @click="handlePageUser">Giao diện người dùng</v-btn>
           </v-list-item>
         </v-list-item-group>
       </v-navigation-drawer>
@@ -108,8 +110,19 @@
       </template>
         <template v-slot:[`item.actions`]="{ item }">
           <div>
-            <v-btn color="primary" @click="update()"> Update </v-btn>
-            <v-btn color="warning" @click="remove(item)"> Remove </v-btn>
+            <div class="my-2">
+              <v-btn color="primary" fab x-small dark @click="update()">
+                <v-icon>mdi-pencil</v-icon>
+              </v-btn>
+              &nbsp;
+              <v-btn color="warning" fab x-small dark @click="view()">
+                <v-icon>mdi mdi-eye-outline</v-icon>
+              </v-btn>
+              &nbsp;
+              <v-btn color="error" fab x-small dark @click="remove(item)">
+                <v-icon>mdi mdi-trash-can</v-icon>
+              </v-btn>
+            </div>
           </div>
         </template>
       </v-data-table>
@@ -196,6 +209,9 @@
         },
         handleUser(){
             this.$router.push({ name: "ListUser" });
+        },
+        handlePageUser(){
+          this.$router.push({ name: "Home" });
         },
         handleAddNewExcel(){
           Request.post("login", this.params)

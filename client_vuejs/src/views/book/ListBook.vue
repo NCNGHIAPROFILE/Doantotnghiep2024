@@ -72,7 +72,7 @@
         </v-list-item>
         <v-list-item>
           <span class="mdi mdi-information"></span>
-          <v-btn text>About</v-btn>
+          <v-btn text @click="handlePageUser">Giao diện người dùng</v-btn>
         </v-list-item>
       </v-list-item-group>
     </v-navigation-drawer>
@@ -83,30 +83,41 @@
       class="elevation-1"
     >
     <template v-slot:[`item.Picture`]="{ item }">
-      <v-img :src="'http://127.0.0.1:8000/images/' + item.Picture" max-width="100" max-height="100"></v-img>
+      <v-img :src="'http://127.0.0.1:8000/images/' + item.Picture" max-width="80px" max-height="80px"></v-img>
     </template>
-      <template v-slot:[`item.Type`]="{ item }">
-        <div>
-          {{ item.Type == 0 ? "Sách Giấy" : "Sách Số"}}
-        </div>
-      </template>
-      <template v-slot:[`item.Status`]="{ item }">
-        <div>
-          {{ item.Status == 0 ? "Đang sử dụng" : "Không tồn tại"}}
-        </div>
-      </template>
-      <template v-slot:[`item.Quantity`]="{ item }">
-        <div>
-          {{ item.Quantity == 0 ? "Hết sách" : "Còn sách"}}
-        </div>
-      </template>
-      <template v-slot:[`item.actions`]="{ item }">
-        <div>
-          <v-btn color="primary" @click="update()"> Update </v-btn>
-          <v-btn color="warning" @click="remove(item)"> Remove </v-btn>
-        </div>
-      </template>
-    </v-data-table>
+    <template v-slot:[`item.Type`]="{ item }">
+      <div>
+        {{ item.Type == 0 ? "Sách Giấy" : "Sách Số"}}
+      </div>
+    </template>
+    <template v-slot:[`item.Status`]="{ item }">
+      <div class="status">
+        <span v-if="item.Status === 0" class="mdi mdi-check-outline"></span>
+        <span v-else class="mdi mdi-close-box-outline"></span>
+      </div>
+    </template>
+    <template v-slot:[`item.Quantity`]="{ item }">
+      <div class="status">
+        <span v-if="item.Quantity !== 0" class="mdi mdi-check-outline"></span>
+        <span v-else class="mdi mdi-magnify-close"></span>
+      </div>
+    </template>
+    <template v-slot:[`item.actions`]="{ item }">
+      <div class="my-2">
+        <v-btn color="primary" fab x-small dark @click="update()">
+          <v-icon>mdi-pencil</v-icon>
+        </v-btn>
+        &nbsp;
+        <v-btn color="warning" fab x-small dark @click="view()">
+          <v-icon>mdi mdi-eye-outline</v-icon>
+        </v-btn>
+        &nbsp;
+        <v-btn color="error" fab x-small dark @click="remove(item)">
+          <v-icon>mdi mdi-trash-can</v-icon>
+        </v-btn>
+      </div>
+    </template>
+  </v-data-table>
   </div>
 </template>
 <script>
@@ -122,12 +133,9 @@ export default {
       headers: [
         { text: "id", value: "id" },
         { text: "Picture", value: "Picture" },
-        { text: "MaSach", value: "MaSach" },
         { text: "NameBook", value: "NameBook" },
         { text: "Author", value: "Author" },
-        { text: "MaAdmin", value: "MaAdmin" },
         { text: "Category", value: "Category" },
-        { text: "Type", value: "Type" },
         { text: "MaProducer", value: "MaProducer" },
         { text: "YearPublish", value: "YearPublish" },
         { text: "Tình trạng sách", value: "Quantity" },
@@ -171,6 +179,7 @@ export default {
       Request.delete("Books/DeleteBook/" + item.id)
         .then((response) => {
           if (response.data.status == 200){
+            window.location.reload();
             this.getData();
           }
         })
@@ -179,6 +188,9 @@ export default {
     },
     handleUser(){
       this.$router.push({ name: "ListUser" });
+    },
+    handlePageUser(){
+      this.$router.push({ name: "Home" });
     },
     handleMenuItemClick(item) {
       if (item == 1){
@@ -204,5 +216,13 @@ export default {
 <style>
 .inline {
   display: flex;
+}
+.status{
+  justify-content: center;
+  display: flex;
+  position: relative;
+  z-index: 0;
+  justify-content: center;
+  align-items: center; 
 }
 </style>

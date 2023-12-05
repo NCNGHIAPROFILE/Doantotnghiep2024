@@ -18,6 +18,7 @@
     
       <v-list-item-group>
         <v-list-item>
+          <span class="mdi mdi-book-open-blank-variant"></span>
           <v-menu offset-y>
             <template v-slot:activator="{ on }">
               <v-btn text v-on="on">
@@ -36,6 +37,7 @@
           </v-menu>
         </v-list-item>
         <v-list-item>
+          <span class="mdi mdi-ticket-account"></span>
           <v-menu offset-y>
             <template v-slot:activator="{ on }">
               <v-btn text v-on="on">
@@ -57,14 +59,16 @@
           </v-menu>
         </v-list-item>
         <v-list-item>
+          <span class="mdi mdi-account-cog"></span>
           <v-btn text @click="handleUser">Quản lý người dùng</v-btn>
         </v-list-item>
         <v-list-item>
+          <span class="mdi mdi-account-key"></span>
           <v-btn text>Account</v-btn>
         </v-list-item>
         <v-list-item>
-          <v-icon icon="mdi-information"></v-icon>
-          <v-btn text>About</v-btn>
+          <span class="mdi mdi-information"></span>
+          <v-btn text @click="handlePageUser">Giao diện người dùng</v-btn>
         </v-list-item>
       </v-list-item-group>
     </v-navigation-drawer>
@@ -81,12 +85,14 @@
         </div>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <div>
-          <v-btn color="primary" @click="update(item)"> 
-              {{ item.StatusTicket == 0 ? "Duyệt Ticket" : item.StatusTicket == 1 ? "Duyệt trả" : "Đã trả"}}
+        <div class="my-2">
+          <v-btn small color="primary" dark @click="update(item)">
+            {{ item.StatusTicket == 0 ? "Duyệt Ticket" : item.StatusTicket == 1 ? "Duyệt trả" : "Đã trả"}}
           </v-btn>
-          <v-btn color="warning" @click="remove(item)"> Remove </v-btn>
-
+          &nbsp;
+          <v-btn color="error" fab x-small dark @click="remove(item)">
+            <v-icon>mdi mdi-trash-can</v-icon>
+          </v-btn>
         </div>
       </template>
     </v-data-table>
@@ -147,6 +153,7 @@ export default {
         .then((response) => {
           console.log(response);
           if (response.data.status == 200){
+            window.location.reload();
             this.getData();
           }
         })
@@ -157,6 +164,7 @@ export default {
       Request.delete("Tickets/DeleteTicket/" + item.id)
         .then((response) => {
           if (response.data.status == 200){
+            window.location.reload();
             this.getData();
           }
         })
@@ -165,6 +173,9 @@ export default {
     },
     handleUser(){
       this.$router.push({ name: "ListUser" });
+    },
+    handlePageUser(){
+      this.$router.push({ name: "Home" });
     },
     handleMenuItemClick(item) {
       if (item == 1){

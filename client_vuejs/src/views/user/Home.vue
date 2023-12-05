@@ -60,7 +60,7 @@
         </v-col>
       </v-row>
     </v-main>
-    <v-navigation-drawer v-model="drawer" app color="#90CAF9">
+    <v-navigation-drawer temporary v-model="drawer" app color="#90CAF9">
       <v-list-item>
         <v-list-item-content class="pa-2">
           <v-list-item-title class="text-h2 font-weight-bold">{{ userName }}</v-list-item-title>
