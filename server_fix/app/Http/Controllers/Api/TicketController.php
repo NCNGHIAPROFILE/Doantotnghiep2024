@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Ticket;
 use App\Models\Book;
+use App\Models\History;
 use App\Models\User;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class TicketController extends Controller
@@ -22,8 +22,8 @@ class TicketController extends Controller
     }
     public function index()
     {   
-        $check = auth()->check();
-        if($check){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $tickets = Ticket::all();
             $ticketsCount = Ticket::all()->count();
             return response()->json([
@@ -54,9 +54,9 @@ class TicketController extends Controller
 
     public function ListTicketUserCreate()
     {   
-        $check = auth()->check();
-        if($check){
-            $user = JWTAuth::parseToken()->authenticate();
+        $user = JWTAuth::parseToken()->authenticate();
+        error_log($user);
+        if($user){
             $tickets = Ticket::where('MaSV', $user->MaSV)->where('StatusTicket', 0)->get();
             $ticketsCount = $tickets->count();
             return response()->json([
@@ -74,9 +74,8 @@ class TicketController extends Controller
 
     public function ListTicketUserApcept()
     {   
-        $check = auth()->check();
-        if($check){
-            $user = JWTAuth::parseToken()->authenticate();
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $tickets = Ticket::where('MaSV', $user->MaSV)->where('StatusTicket', 1)->get();
             $ticketsCount = $tickets->count();
             return response()->json([
@@ -94,9 +93,8 @@ class TicketController extends Controller
 
     public function ListTicketUserGiveback()
     {   
-        $check = auth()->check();
-        if($check){
-            $user = JWTAuth::parseToken()->authenticate();
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $tickets = Ticket::where('MaSV', $user->MaSV)->where('StatusTicket', 2)->get();
             $ticketsCount = $tickets->count();
             return response()->json([
@@ -117,9 +115,8 @@ class TicketController extends Controller
      */
     public function store(Request $request, String $id)
     {
-        $check = auth()->check();
-        if($check) {
-            $user = JWTAuth::parseToken()->authenticate();
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user) {
             $recordUser = User::where('MaSV', $user->MaSV)->first();
             $books = Book::where('id', $id)->first();
             if($recordUser && $books){
@@ -163,8 +160,8 @@ class TicketController extends Controller
      */
     public function show(string $id)
     {
-        $check = auth()->check();
-        if($check){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $detail_Tickets = Ticket::where('id', $id)->first();
             if($detail_Tickets){
                 return response()->json([
@@ -189,8 +186,8 @@ class TicketController extends Controller
 
     public function show1()
     {
-        $check = auth()->check();
-        if($check){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $tickets = Ticket::where('StatusTicket', 0)->get();
             if($tickets){
                 return response()->json([
@@ -215,8 +212,8 @@ class TicketController extends Controller
 
     public function show2()
     {
-        $check = auth()->check();
-        if($check){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $tickets = Ticket::where('StatusTicket', 1)->get();
             if($tickets){
                 return response()->json([
@@ -241,8 +238,8 @@ class TicketController extends Controller
 
     public function show3()
     {
-        $check = auth()->check();
-        if($check){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $tickets = Ticket::where('StatusTicket', 2)->get();
             if($tickets){
                 return response()->json([
@@ -267,8 +264,8 @@ class TicketController extends Controller
 
     public function showUserTicket(Request $request)
     {
-        $check = auth()->check();
-        if($check){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $masv = $request->input('showUserTicket');
             $recordBook = Ticket::where('MaSV', $masv)->get();
             if($recordBook){
@@ -294,9 +291,8 @@ class TicketController extends Controller
 
     public function ShowUserTicketDetail()
     {
-        $check = auth()->check();
-        if($check){
-            $user = auth()->user();
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $recordBook = Ticket::where('MaSV', $user->MaSV)->get();
             if($recordBook){
                 return response()->json([
@@ -324,9 +320,8 @@ class TicketController extends Controller
      */
     public function UpdateBookupdateAccept(Request $request)
     {
-        $check = auth()->check();
-        if($check){
-            $user = JWTAuth::parseToken()->authenticate();
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $ticketsDetail = Ticket::select('StatusTicket')->where('id', $request->id)->first();
             if ($ticketsDetail) {
                 if ($ticketsDetail->StatusTicket == '0') {
@@ -408,8 +403,8 @@ class TicketController extends Controller
     }
 
     public function CancelTicket(string $id){
-        $check = auth()->check();
-        if($check){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $model = Ticket::where('id', $id)->whereNotNull('DateAcceptTiket')->whereNull('DateGiveBack')->first();
             if ($model) {
                 $model->StatusTicket = 2;
@@ -438,8 +433,8 @@ class TicketController extends Controller
      */
     public function destroy(string $id)
     {
-        $check = auth()->check();
-        if($check){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $affectedRows = Ticket::where('id', $id)->where('StatusTicket', '=', '2')->delete();
             if ($affectedRows > 0) {
                 return response()->json([
@@ -462,8 +457,8 @@ class TicketController extends Controller
     }
 
     public function searchBookTicket(Request $request){
-        $check = auth()->check();
-        if($check){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $searchData = $request->input('searchBookTicket');
             $books = Book::where('NameBook', 'like', '%' . $searchData . '%')->get();
             if ($books->isEmpty()) {
@@ -490,8 +485,8 @@ class TicketController extends Controller
     }
 
     public function searchUserTicket(Request $request){
-        $check = auth()->check();
-        if($check){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $searchData = $request->input('searchUserTicket');
             $tickets = Ticket::Where('MaSV', 'like', '%'.$searchData.'%')->get();
             $ticketsCount = Ticket::Where('MaSV', 'like', '%'.$searchData.'%')->count();

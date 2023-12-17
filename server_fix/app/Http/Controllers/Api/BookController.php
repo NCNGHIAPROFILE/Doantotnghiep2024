@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Book;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 
@@ -22,10 +22,6 @@ class BookController extends Controller
 
     public function index()
     {
-        // error_log("======++++");
-        // $user = JWTAuth::parseToken()->authenticate();
-        // error_log("======++++");
-        // error_log($user->email);
         $books = Book::all();
         $booksCount = Book::all()->count();
         return response()->json([
@@ -40,10 +36,9 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        $check = auth()->check();
-        if($check){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $dataCreate = $request->all();
-            $user = JWTAuth::parseToken()->authenticate();
             $get_date = Carbon::now();
             $dataBook = Book::where('NameBook', $dataCreate['NameBook'])->where('Author', $dataCreate['Author']);
             if ($dataBook->exists()) {
@@ -81,6 +76,67 @@ class BookController extends Controller
         }
     }
 
+    public function CreateBookNumber(Request $request)
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
+            $dataCreate = $request->all();
+            $get_date = Carbon::now();
+            $dataBook = Book::where('NameBook', $dataCreate['NameBook'])->where('Author', $dataCreate['Author']);
+            if ($dataBook->exists()) {
+                return response()->json([
+                    'status' => 400,
+                    'message' => "Books already exists!"
+                ], 400);
+            }
+            $dataCreate['MaAdmin'] = $user->MaSV; 
+            $dataCreate['Type'] = 1;
+            $dataCreate['Status'] = 0;
+            $dataCreate['YearPublish'] = $get_date;
+            if ($request->hasFile('Picture')) {
+                $avatar = $request->file('Picture');
+                $imageName = time() . '.' . $avatar->getClientOriginalExtension();
+                $avatar->move(public_path('images'), $imageName);
+                $avatarPath = $imageName;
+            } else {
+                $avatarPath = null;
+            }
+            $dataCreate['Picture'] = $avatarPath;
+            if ($request->hasFile('FileName')) {
+                $file = $request->file('FileName');
+                $fileName = time() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('files_Upload'), $fileName);
+                $filePath = $fileName;
+            } else {
+                $filePath = null;
+            }
+            $dataCreate['FileName'] = $filePath;
+            $books = $this->books->create($dataCreate);
+            return response()->json([
+                'status' => 201,
+                'message' => "Books Upload successfully!",
+                'books' => $books
+            ], 201);
+        } else {
+            return response()->json([
+                'status' => 400,
+                'message' => "You are not logged in! Login Now."
+            ], 400);
+        }
+    }
+
+    public function downloadPDF(String $id)
+    {
+        $fileRecord = Book::where('id', $id)->where('Type', 1)->first();
+
+        if (!$fileRecord) {
+            abort(404, 'File not found');
+        }
+        $filename = $fileRecord->FileName;
+        return ([
+            'file' => "http://localhost:8000/files_Upload/" . $filename,
+        ]);
+    }
     /**
      * Display the specified resource.
      */
@@ -143,8 +199,8 @@ class BookController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $check = auth()->check();
-        if($check){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $books = Book::select('Status')->where('id', $id)->where('Status', '=', '0')->get();
             if($books->count() > 0){
                 $books = array();
@@ -181,9 +237,8 @@ class BookController extends Controller
      */
     public function destroy(string $id)
     {
-        $check = auth()->check();
-        
-        if($check){
+        $user = JWTAuth::parseToken()->authenticate();        
+        if($user){
             $affectedRows = Book::where('id', $id)->whereRaw('Sum_Quantity = Quantity')->delete();
             if ($affectedRows > 0) {
                 return response()->json([
@@ -265,12 +320,12 @@ class BookController extends Controller
         }
     }
 
-    public function uploadPDF(Request $request){
-        if ($request->hasFile('pdf_file') && $request->file('pdf_file')->getClientOriginalExtension() == 'pdf') {
-            $pdf = $request->file('pdf_file');
-            $pdf->storeAs('File/pdf_uploads', $pdf->getClientOriginalName(), 'local');
-            return response()->json(['message' => 'File PDF đã được tải lên thành công'], 200);
-        }
-        return response()->json(['message' => 'Vui lòng chọn file PDF để tải lên'], 400);
-    }
+    // public function uploadPDF(Request $request){
+    //     if ($request->hasFile('pdf_file') && $request->file('pdf_file')->getClientOriginalExtension() == 'pdf') {
+    //         $pdf = $request->file('pdf_file');
+    //         $pdf->storeAs('File/pdf_uploads', $pdf->getClientOriginalName(), 'local');
+    //         return response()->json(['message' => 'File PDF đã được tải lên thành công'], 200);
+    //     }
+    //     return response()->json(['message' => 'Vui lòng chọn file PDF để tải lên'], 400);
+    // }
 }

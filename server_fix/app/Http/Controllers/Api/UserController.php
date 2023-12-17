@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\UserImport;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
 {
@@ -21,8 +22,8 @@ class UserController extends Controller
     }
     public function index()
     {
-        $check = auth()->check();
-        if($check){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $users = User::all();
             $usersCount = $users->count();
             return response()->json([
@@ -107,8 +108,8 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        $check = auth()->check();
-        if($check){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $users = User::where('id', $id)->first();
             if($users){
                 return response()->json([
@@ -136,8 +137,8 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $check = auth()->check();
-        if($check){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $users = User::find($id);
             if($users){
                 $dataCreate = $request->all();
@@ -194,8 +195,8 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {    
-        $check = auth()->check();
-        if($check){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $affectedRows = User::Where('id', $id)->delete();
             if ($affectedRows > 0) {
                 return response()->json([
@@ -219,8 +220,8 @@ class UserController extends Controller
 
     public function searchUser(Request $request)
     {
-        $check = auth()->check();
-        if($check){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $searchData = $request->input('searchUser');
             $users = User::Where('MaSV', 'like', '%'.$searchData.'%')->get();
             $usersCount = User::Where('MaSV', 'like', '%'.$searchData.'%')->count();

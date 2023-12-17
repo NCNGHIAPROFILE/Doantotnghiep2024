@@ -13,6 +13,7 @@
         "laravel/tinker": "^2.7",
         "maatwebsite/excel": "^3.1.31",
         "paragonie/sodium_compat": "^1.20",
+        "spatie/pdf-to-text": "^1.52",
         "tymon/jwt-auth": "^2.0"
     },
     "require-dev": {

@@ -25,7 +25,8 @@ return new class extends Migration
             $table->string('Content', 255)->nullable();
             $table->integer('Status');
             $table->string('Picture', 255)->nullable();
-            $table->integer('Sum_Quantity');
+            $table->string('FileName', 255)->nullable();
+            $table->integer('Sum_Quantity')->nullable();
         });
     }
 

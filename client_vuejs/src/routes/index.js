@@ -77,13 +77,13 @@ const routes = [{
       meta: { title: 'FormUpdateUser' }
     },
     {
-      path: '/view-book-ticket',
+      path: '/view-book-detail-basic/:idBook',
       name: 'BookDetailMuon',
       component: BookDetailMuon,
       meta: { title: 'BookDetailMuon' }
     },
     {
-      path: '/view-book-download',
+      path: '/view-book-detail-number/:idBook',
       name: 'BookDetailDownload',
       component: BookDetailDownload,
       meta: { title: 'BookDetailDownload' }

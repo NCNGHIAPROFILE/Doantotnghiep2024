@@ -45,7 +45,7 @@
               <v-card-text >{{ `Nhà xuất bản: ${book.MaProducer}`}}</v-card-text>
               <v-row>
                 <v-col align="center" justify="center">
-                  <v-btn color="error" @click="viewDetails(book)">
+                  <v-btn color="error" @click="viewDetails(book.id)">
                     <span class="mdi mdi-eye-arrow-left"></span>
                     View Details</v-btn>
                 </v-col>
@@ -254,11 +254,11 @@
       },
       changePage(page) {
           this.currentPage = page;
-           
-        },
-      viewDetails(book) {
-        this.$router.push({ name: "BookDetailDownload" });
-        console.log(`View details of book: ${book.NameBook}`);
+      },
+
+      viewDetails(idBook) {
+        console.log(idBook);
+        this.$router.push({ path: "/view-book-detail-number/" + idBook });
       },
   
       onFileChange(event) {

@@ -21,8 +21,8 @@ class HistoryController extends Controller
     }
     public function index()
     {    
-        $check = auth()->check();
-        if($check){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $historys = History::all();
             $historysCount = History::all()->count();
             return response()->json([
@@ -52,9 +52,8 @@ class HistoryController extends Controller
     }
     public function listUserHistory()
     {    
-        $check = auth()->check();
-        if($check){
-            $user = JWTAuth::parseToken()->authenticate();
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $historys = History::where('MaSV', $user->MaSV)->get();
             $historysCount = History::where('MaSV', $user->MaSV)->count();
             return response()->json([
@@ -73,23 +72,28 @@ class HistoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(String $id)
+    public function store(Request $request, String $id)
     {
-        $check = auth()->check();
-        if($check){
-            $user = JWTAuth::parseToken()->authenticate();
-            $book = Book::where('id', $id)->first();
-            if( $book ){
-                $get_date = Carbon::now();
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user) {
+            $recordUser = User::where('MaSV', $user->MaSV)->first();
+            $books = Book::where('id', $id)->where('Type', 1)->first();
+            if($recordUser && $books){
                 $dataCreate['MaSV'] = $user->MaSV;
-                $dataCreate['MaSach'] = $book->MaSach;
-                $dataCreate['DateDownload'] = $get_date;
-                $historys = History::create($dataCreate);
+                $dataCreate['MaSach'] = $books->MaSach;
+                $dataCreate['DateDownload'] = Carbon::now();
+                $tickets = History::create($dataCreate);
                 return response()->json([
                     'status' => 201,
-                    'message' => "historys Created successfully!",
-                    'historys' => $historys
+                    'message' => "Tickets Download successfully!",
+                    'tickets' => $tickets
                 ], 201);
+            }
+            else{
+                return response()->json([
+                    'status' => 400,
+                    'message' => "User or Book do not exist!"
+                ], 400);
             }
         } else {
             return response()->json([
@@ -104,8 +108,8 @@ class HistoryController extends Controller
      */
     public function show(string $id)
     {
-        $check = auth()->check();
-        if($check){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $user = User::where('id', $id)->first();
             $detail_History = History::where('MaSV', $user->MaSV)->get();
             if($detail_History){
@@ -142,8 +146,8 @@ class HistoryController extends Controller
      */
     public function destroy(string $id)
     {
-        $check = auth()->check();
-        if($check){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $affectedRows = History::where('id', $id)->delete();
             if ($affectedRows > 0) {
                 return response()->json([
@@ -167,8 +171,8 @@ class HistoryController extends Controller
 
     public function showHistoryUser(Request $request)
     {
-        $check = auth()->check();
-        if($check){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $searchData = $request->input('showHistoryUser');
             $historys = History::Where('MaSV', 'like', '%'.$searchData.'%')->get();
             $historysCount = History::Where('MaSV', 'like', '%'.$searchData.'%')->count();
@@ -196,8 +200,8 @@ class HistoryController extends Controller
 
     public function showHistoryBook(Request $request)
     {
-        $check = auth()->check();
-        if($check){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user){
             $searchData = $request->input('showHistoryBook');
             $historys = Book::where('NameBook', 'like', '%' . $searchData . '%')->get();
             if ($historys->isEmpty()) {

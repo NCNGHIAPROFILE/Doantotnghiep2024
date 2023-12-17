@@ -80,7 +80,6 @@ class AuthController extends Controller
     }
 
     public function login(Request $request){
-        error_log($request->email);
         $user = User::where('email', $request->email)->first();
         if (!Hash::check($request->password, $user->password)) {
             return response()->json([

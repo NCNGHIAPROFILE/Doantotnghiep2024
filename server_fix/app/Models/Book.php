@@ -24,6 +24,7 @@ class Book extends Model
         'Content',
         'Status',
         'Picture',
+        'FileName',
         'Sum_Quantity',
     ];
     public $timestamps = false;

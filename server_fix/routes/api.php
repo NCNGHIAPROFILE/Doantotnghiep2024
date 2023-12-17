@@ -31,6 +31,7 @@ Route::group(['middleware' => 'api'], function () {
     Route::get('/Books/SearchCategory', [BookController::class, 'searchCategoryBook']);
     Route::get('/Books/ListBookBasic', [BookController::class, 'ListBookBasic']);
     Route::get('/Books/ListBookNumber', [BookController::class, 'ListBookNumber']);
+    Route::get('/Books/DownloadPDF/{id}', [BookController::class, 'downloadPDF']);
     
 
     //ticket
@@ -64,6 +65,7 @@ Route::group(['middleware' => 'api'], function () {
             
         // book
         Route::post('/Books/AddBook', [BookController::class, 'store']);
+        Route::post('/Books/UploadBook', [BookController::class, 'CreateBookNumber']);
         Route::put('/Books/UpdateBook/{id}', [BookController::class, 'update']);
         Route::delete('/Books/DeleteBook/{id}', [BookController::class, 'destroy']);        
        

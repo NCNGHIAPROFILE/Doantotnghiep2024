@@ -272,24 +272,25 @@
         formData.append('password', this.params.password);
         formData.append('ImageUser', this.params.avatar);
         Request.post("Users/AddUser", formData)
-            .then(response => {
-                console.log('Registration successful:', response.data);
-                this.$router.push({ name: "ListUser" });
-            })
-            .catch(error => {
-                console.error('Registration error:', error.response.data);
-                this.$router.push({ name: "PageNotFound" });
-            });
+          .then(response => {
+              console.log('Registration successful:', response.data);
+              this.$router.push({ name: "ListUser" });
+          })
+          .catch(error => {
+              console.error('Registration error:', error.response.data);
+              this.$router.push({ name: "PageNotFound" });
+          });
         },
         logout() {
-            Request.post("logout")
-            .then(response => {
-                console.log(response.data);
-                this.$router.push('/login');
-            })
-            .catch(error => {
-                console.error('Logout error:', error);
-            });
+          Request.post("logout")
+          .then(response => {
+              localStorage.clear();
+              console.log(response.data);
+              this.$router.push('/login');
+          })
+          .catch(error => {
+              console.error('Logout error:', error);
+          });
         },
         getData() {
           Request.get("Users/ListUser")

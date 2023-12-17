@@ -62,40 +62,38 @@
       </v-main> -->
 
       <v-main style="display: block;">
-        <v-card class="mx-auto" max-width="600">
+        <div class="d-flex justify-center" >
+          <div>
             <v-img
-            class="align-end text-white"
-            height="300"
-            src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-            cover
-            >
-                <v-row class="fill-height align-end">
-                    <v-col>
-                        <v-card-title :style="{ fontSize: '26px', fontWeight: 'bold' }" class="white--text">
-                            Trí tuệ nhân tạo ???
-                        </v-card-title>
-                    </v-col>
-                </v-row>
+              class="align-end text-white"
+              height="500"
+              width="500"
+              :src="'http://127.0.0.1:8000/images/' + books.Picture"
+              cover>
             </v-img>
+          </div>
 
+          <v-card style="width: 30%; height: 500px; margin-top: 0%;">
             <v-card-text>
-                <v-row>
-                    <v-col>
-                        <v-divider class="my-3"></v-divider>
-                        <div class="headline">
-                            <strong>Tác giả:</strong> Nghĩa
-                        </div>
-                        <div class="subheading">
-                            <strong>Xuất bản năm</strong> 14/02/2015
-                        </div>
-                    </v-col>
-                </v-row>
+              <v-row>
+                <v-col>
+                  <v-divider class="my-3"></v-divider>
+                  <div class="headline">
+                    <strong>Tác giả:</strong> Nghĩa
+                  </div>
+                  <div class="subheading">
+                    <strong>Xuất bản năm</strong> 14/02/2015
+                  </div>
+                </v-col>
+              </v-row>
             </v-card-text>
 
             <v-card-actions>
-            <v-btn color="error" @click="explore">Mượn sách</v-btn>
+              <v-btn color="error" @click="createticket()">Mượn sách</v-btn>
             </v-card-actions>
-        </v-card>
+          </v-card>
+        </div>
+
       </v-main>
 
 
@@ -192,13 +190,26 @@
       };
     },
     created() {
-      this.getListBook();
+      this.viewDetails();
     },
     methods: {
+      createticket(){
+        console.log(this.$route.params.idBook);
+        Request.post("Tickets/AddTicket/" + this.$route.params.idBook)
+          .then(response => {
+            console.log('Create ticket successful:', response.data);
+            this.$router.push({ name: "UserListTicketCreate" });
+        })
+        .catch(error => {
+          console.error('Registration error:', error.response.data);
+          this.$router.push({ name: "PageNotFound" });
+        });
+      },
       logout() {
         Request.post("logout")
         .then(response => {
             console.log(response.data);
+            localStorage.clear();
             this.$router.push('/login');
         })
         .catch(error => {
@@ -287,9 +298,15 @@
       changePage(page) {
           this.currentPage = page;
         },
-      viewDetails(book) {
-        // this.$router.push('/login');
-        console.log(`View details of book: ${book.NameBook}`);
+      viewDetails() {
+        console.log(this.$route.params.idBook);
+        Request.get("Books/ShowBook/" + this.$route.params.idBook)
+        .then((response) => {
+          this.books = response.data.books;
+          console.log(response);
+        })
+        .catch(() => {})
+        .finally(() => {});
       },
   
       onFileChange(event) {
