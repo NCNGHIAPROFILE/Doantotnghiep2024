@@ -19,7 +19,7 @@ return new class extends Migration
             $table->String('MaAdmin', 20)->nullable();
             $table->string('Category', 70);
             $table->integer('Type')->nullable();
-            $table->integer('MaProducer');
+            $table->string('MaProducer')->nullable();
             $table->date('YearPublish')->nullable();
             $table->integer('Quantity')->nullable();
             $table->string('Content', 255)->nullable();

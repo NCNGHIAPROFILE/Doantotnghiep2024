@@ -4,62 +4,12 @@
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
   
         <v-toolbar-title class="mr-6">Chi tiết sách giấy</v-toolbar-title>
-  
-        <v-text-field
-          v-model="search"
-          label="Tìm kiếm..."
-          hide-details
-          append-icon="mdi-magnify"
-          flat
-          solo-inverted
-          dense
-          style="padding-left: 10px; width: 50px;"
-        ></v-text-field>
-  
-        <v-select
-          dense
-          outlined
-          label="Loại tìm kiếm"
-          :items="['name', 'author', 'category']"
-          v-model="typeSearch" 
-          style="padding-left: 10px; width: 50px; padding-top: 25px;"
-          :rules="[(v) => !!v || 'Nhập loại search vào!']"
-        ></v-select>
-  
-        <v-btn class="ma-2" outlined color="#90CAF9" @click="onSearch()"> Search </v-btn>
         <v-spacer></v-spacer>
   
         <v-btn class="ma-2" outlined color="#90CAF9" @click="logout()">
           <span class="mdi mdi-logout"></span>
           Logout</v-btn>
       </v-app-bar>
-      
-      <!-- <v-main style="display: block;">
-        <v-row class="content-wrapper">
-          <v-col v-for="(book, index) in displayedBooks" :key="book.id || index" cols="12" sm="4" md="4" lg="3" xl="3">
-            <v-card style="padding-left: 10px; padding-right: 10px;" height="100%">
-              <v-img :src="'http://127.0.0.1:8000/images/' + book.Picture" max-width="500" max-height="200"></v-img>
-              <v-card-title >{{ book.NameBook }}</v-card-title>
-              <v-card-text style="padding-top: 20px;">{{ `Author: ${book.Author}` }}</v-card-text>
-              <v-card-text >{{ `Thể loại: ${book.Category}` }}</v-card-text>
-              <v-card-text >{{ `Nhà xuất bản: ${book.MaProducer}`}}</v-card-text>
-              <v-row>
-                <v-col align="center" justify="center">
-                  <v-btn color="error" @click="viewDetails(book)">
-                    <span class="mdi mdi-eye-arrow-left"></span>
-                    View Details</v-btn>
-                </v-col>
-              </v-row>
-            </v-card>
-          </v-col>
-        </v-row>
-    
-        <v-row style="padding-top: 20px;" class="content-wrapper">
-          <v-col>
-            <v-pagination v-model="currentPage" :length="totalPages" @input="changePage"></v-pagination>
-          </v-col>
-        </v-row>
-      </v-main> -->
 
       <v-main style="display: block;">
         <div class="d-flex justify-center" >
@@ -75,14 +25,27 @@
 
           <v-card style="width: 30%; height: 500px; margin-top: 0%;">
             <v-card-text>
+              <h3 style="color: red;">THÔNG TIN SÁCH</h3>
               <v-row>
                 <v-col>
                   <v-divider class="my-3"></v-divider>
                   <div class="headline">
-                    <strong>Tác giả:</strong> Nghĩa
+                    <strong>Tên sách: </strong> {{ books.NameBook }}
                   </div>
                   <div class="subheading">
-                    <strong>Xuất bản năm</strong> 14/02/2015
+                    <strong>Tác giả: </strong> {{ books.Author }}
+                  </div>
+                  <div class="subheading">
+                    <strong>Thể loại: </strong> {{ books.Category }}
+                  </div>
+                  <div class="subheading">
+                    <strong>Nhà xuất bản: </strong> {{ books.MaProducer }}
+                  </div>
+                  <div class="subheading">
+                    <strong>Xuất bản năm</strong> {{ books.YearPublish }}
+                  </div>
+                  <div class="subheading">
+                    <strong>Mô tả: </strong> {{ books.Content }}
                   </div>
                 </v-col>
               </v-row>
@@ -349,7 +312,8 @@
   }
   .subheading {
     font-size: 16px;
-    margin-top: 5px;
+    margin-top: 100px;
+    padding-top: 20px;
   }
   </style>
   

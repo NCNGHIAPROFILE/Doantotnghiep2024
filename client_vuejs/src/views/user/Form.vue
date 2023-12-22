@@ -284,8 +284,8 @@
         logout() {
           Request.post("logout")
           .then(response => {
-              localStorage.clear();
               console.log(response.data);
+              localStorage.clear();
               this.$router.push('/login');
           })
           .catch(error => {

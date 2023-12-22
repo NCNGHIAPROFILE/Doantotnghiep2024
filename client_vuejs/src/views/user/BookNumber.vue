@@ -34,7 +34,7 @@
           Logout</v-btn>
       </v-app-bar>
       
-      <v-main style="display: block;">
+      <div style="display: block;">
         <v-row class="content-wrapper">
           <v-col v-for="(book, index) in displayedBooks" :key="book.id || index" cols="12" sm="4" md="4" lg="3" xl="3">
             <v-card style="padding-left: 10px; padding-right: 10px;" height="100%">
@@ -59,7 +59,7 @@
             <v-pagination v-model="currentPage" :length="totalPages" @input="changePage"></v-pagination>
           </v-col>
         </v-row>
-      </v-main>
+      </div>
       <v-navigation-drawer v-model="drawer" app color="#90CAF9">
         <v-list-item>
           <v-list-item-content class="pa-2">
@@ -111,7 +111,7 @@
           </v-list-item>
           <v-list-item>
             <span class="mdi mdi-file-download"></span>
-            <v-btn text>Lịch sử tải xuống</v-btn>
+            <v-btn text @click="handleUserHistoryClick()">Lịch sử tải xuống</v-btn>
           </v-list-item>
           <v-list-item>
             <span class="mdi mdi-account-cog"></span>
@@ -190,7 +190,7 @@
         Request.post("logout")
         .then(response => {
             console.log(response.data);
-             
+            localStorage.clear();
             this.$router.push('/login');
           })
           .catch(error => {
@@ -211,9 +211,10 @@
       },
       searchName() {
         this.loading = true;
-        Request.get("Books/SearchName?searchNameBook=" + this.search)
+        Request.get("Books/SearchNameNumber?searchNameBookNumber=" + this.search)
           .then((response) => {
             this.data = response.data.books;
+            this.books = this.data;
             console.log(response);
           })
           .catch(() => {})
@@ -221,9 +222,10 @@
       },
       searchAuthor() {
         this.loading = true;
-        Request.get("Books/SearchAuthor?searchAuthorBook=" + this.search)
+        Request.get("Books/SearchAuthorNumber?searchAuthorBookNumber=" + this.search)
           .then((response) => {
             this.data = response.data.books;
+            this.books = this.data;
             console.log(response);
           })
           .catch(() => {})
@@ -231,9 +233,10 @@
       },
       searchCategory() {
         this.loading = true;
-        Request.get("Books/SearchCategory?searchCategoryBook=" + this.search)
+        Request.get("Books/SearchCategoryNumber?searchCategoryBookNumber=" + this.search)
           .then((response) => {
             this.data = response.data.books;
+            this.books = this.data;
             console.log(response);
           })
           .catch(() => {})
@@ -263,16 +266,19 @@
   
       onFileChange(event) {
         this.selectedFile = event.target.files[0];
+      },
+      handleUserHistoryClick(){
+        this.$router.push({ name: "UserHistory" });
       }
     },
     computed: {
       totalPages() {
-        return Math.ceil(this.books.length / this.itemsPerPage);
+        return this.books?.length > 0 ? Math.ceil(this.books?.length / this.itemsPerPage) : 0;
       },
       displayedBooks() {
         const start = (this.currentPage - 1) * this.itemsPerPage;
         const end = start + this.itemsPerPage;
-        return this.books.slice(start, end);
+        return this.books?.slice(start, end);
       },
     },
   };

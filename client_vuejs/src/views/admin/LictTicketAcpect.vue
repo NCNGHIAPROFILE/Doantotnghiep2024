@@ -134,6 +134,7 @@
         Request.post("logout")
         .then(response => {
             console.log(response.data);
+            localStorage.clear();
             this.$router.push('/login');
           })
           .catch(error => {

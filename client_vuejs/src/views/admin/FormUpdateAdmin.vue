@@ -182,19 +182,13 @@
         valid: false,
         passwordShow: false,
         params: {
-            id: "",
-            namebook: "",
-            author: "",
-            content: "",
-            category: "",
-            producer: "",
-            status: "",
-            sum_quantity: "",
-            avatar: "",
-            options: [
-                { dbValue: 0, displayText: "Enable" },
-                { dbValue: 1, displayText: "Disable" },
-            ],
+          namebook: "",
+          author: "",
+          content: "",
+          category: "",
+          producer: "",
+          sum_quantity: "",
+          avatar: "",
         },
         pleaseSignIn: "Cập nhật sách giấy",
         nameRulesnamebook: [
@@ -228,7 +222,6 @@
     methods: {
         submitForm() {
         const formData = new FormData();
-        formData.append('id', this.params.id);
         formData.append('NameBook', this.params.namebook);
         formData.append('Author', this.params.author);
         formData.append('Content', this.params.content);
@@ -236,7 +229,7 @@
         formData.append('MaProducer', this.params.producer);
         formData.append('Sum_Quantity', this.params.sum_quantity);
         formData.append('Picture', this.params.avatar);
-        Request.put(`Books/UpdateBook/${this.params.id}`, formData)
+        Request.post(`Books/UpdateBook/${this.$route.params.idBook}`, formData)
             .then(response => {
               if (response.data.status == 200){
                 this.$router.push({ name: "AdminListBook" });
@@ -247,14 +240,11 @@
                 this.$router.push({ name: "PageNotFound" });
             });
         },
-        getStatusText() {
-            const selectedOption = this.params.options.find(option => option.dbValue === this.params.status);
-            return selectedOption ? selectedOption.displayText : '';
-        },
         logout() {
             Request.post("logout")
             .then(response => {
                 console.log(response.data);
+                localStorage.clear();
                 this.$router.push('/login');
             })
             .catch(error => {
@@ -262,10 +252,23 @@
             });
         },
         getData() {
-          Request.get("Books/ListBookBasic")
+          console.log(this.$route.params.idBook);
+          Request.get("Books/ShowBook/" + this.$route.params.idBook)
             .then((response) => {
-                this.data = response.data;
+              if (response.data.status === 200) {
+                this.params = response.data.books;
+                this.params.namebook = this.params.NameBook;
+                this.params.author = this.params.Author;
+                this.params.content = this.params.Content;
+                this.params.category = this.params.Category;
+                this.params.producer = this.params.MaProducer;
+                this.params.sum_quantity = this.params.Sum_Quantity;
+                this.params.avatar = this.params.Picture;
                 console.log(response);
+              }
+              else{
+                console.error('Error fetching user data:', response.data.message);
+              }
             })
             .catch(() => {})
             .finally(() => {});

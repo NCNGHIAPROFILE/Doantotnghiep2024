@@ -6,6 +6,28 @@
       <v-toolbar-title class="mr-6">List Sách giấy</v-toolbar-title>
       <v-btn class="ma-2" color="#90CAF9" @click="handleAddNew()">
         <span class="mdi mdi-book-plus"></span>Thêm mới</v-btn>
+      <v-text-field
+        v-model="search"
+        label="Tìm kiếm..."
+        hide-details
+        append-icon="mdi-magnify"
+        flat
+        solo-inverted
+        dense
+        style="padding-left: 10px; width: 50px;"
+      ></v-text-field>
+
+      <v-select
+        dense
+        outlined
+        label="Loại tìm kiếm"
+        :items="['name', 'author', 'category']"
+        v-model="typeSearch" 
+        style="padding-left: 10px; width: 50px; padding-top: 25px;"
+        :rules="[(v) => !!v || 'Nhập loại search vào!']"
+      ></v-select>
+
+      <v-btn class="ma-2" outlined color="#90CAF9" @click="onSearch()"> Search </v-btn>
       <v-spacer></v-spacer>
 
       <v-btn class="ma-2" outlined color="#90CAF9" @click="logout">
@@ -104,12 +126,8 @@
     </template>
     <template v-slot:[`item.actions`]="{ item }">
       <div class="my-2">
-        <v-btn color="primary" fab x-small dark @click="update()">
+        <v-btn color="primary" fab x-small dark @click="update(item.id)">
           <v-icon>mdi-pencil</v-icon>
-        </v-btn>
-        &nbsp;
-        <v-btn color="warning" fab x-small dark @click="view()">
-          <v-icon>mdi mdi-eye-outline</v-icon>
         </v-btn>
         &nbsp;
         <v-btn color="error" fab x-small dark @click="remove(item)">
@@ -129,6 +147,8 @@ export default {
       drawer: true,
       books: [], 
       selectedFile: null,
+      search: "",
+      typeSearch: "",
       data: {},
       headers: [
         { text: "id", value: "id" },
@@ -139,7 +159,6 @@ export default {
         { text: "MaProducer", value: "MaProducer" },
         { text: "YearPublish", value: "YearPublish" },
         { text: "Tình trạng sách", value: "Quantity" },
-        { text: "Content", value: "Content" },
         { text: "Status", value: "Status" },
         { text: "Sum_Quantity", value: "Sum_Quantity" },
         { text: "Actions", value: "actions", sortable: false },
@@ -154,6 +173,7 @@ export default {
       Request.post("logout")
       .then(response => {
           console.log(response.data);
+          localStorage.clear();
           this.$router.push('/login');
         })
         .catch(error => {
@@ -172,8 +192,9 @@ export default {
     handleAddNew(){
       this.$router.push({ name: "AdminForm" });
     },
-    update(){
-      this.$router.push({ name: "FormUpdateAdmin" });
+    update(idBook){
+      console.log(idBook);
+      this.$router.push({ path: "/form-update-admin/" + idBook });
     },
     remove(item) {
       Request.delete("Books/DeleteBook/" + item.id)
@@ -207,6 +228,49 @@ export default {
         this.$router.push({ name: "AdminListBook" });
       }else if (item == 2){
         this.$router.push({ name: "AdminListBookNumber" });
+      }
+    },
+    searchName() {
+      this.loading = true;
+      Request.get("Books/SearchNameBasic?searchNameBookBasic=" + this.search)
+        .then((response) => {
+          this.data = response.data.books;
+          console.log(response);
+        })
+        .catch(() => {})
+        .finally(() => {});
+    },
+    searchAuthor() {
+      this.loading = true;
+      Request.get("Books/SearchAuthorBasic?searchAuthorBookBasic=" + this.search)
+        .then((response) => {
+          this.data = response.data.books;
+          console.log(response);
+        })
+        .catch(() => {})
+        .finally(() => {});
+    },
+    searchCategory() {
+      this.loading = true;
+      Request.get("Books/SearchCategoryBasic?searchCategoryBookBasic=" + this.search)
+        .then((response) => {
+          this.data = response.data.books;
+          console.log(response);
+        })
+        .catch(() => {})
+        .finally(() => {});
+    },
+    onSearch() {
+      switch (this.typeSearch) {
+        case "name":
+          this.searchName();
+          break;
+        case "author":
+          this.searchAuthor();
+          break;
+        case "category":
+          this.searchCategory();
+          break;
       }
     },
   },

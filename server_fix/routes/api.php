@@ -26,9 +26,12 @@ Route::group(['middleware' => 'api'], function () {
     //book
     Route::get('/Books/ListBook', [BookController::class, 'index']);
     Route::get('/Books/ShowBook/{id}', [BookController::class, 'show']);
-    Route::get('/Books/SearchName', [BookController::class, 'searchNameBook']);
-    Route::get('/Books/SearchAuthor', [BookController::class, 'searchAuthorBook']);
-    Route::get('/Books/SearchCategory', [BookController::class, 'searchCategoryBook']);
+    Route::get('/Books/SearchNameBasic', [BookController::class, 'searchNameBookBasic']);
+    Route::get('/Books/SearchAuthorBasic', [BookController::class, 'searchAuthorBookBasic']);
+    Route::get('/Books/SearchCategoryBasic', [BookController::class, 'searchCategoryBookBasic']);
+    Route::get('/Books/SearchNameNumber', [BookController::class, 'searchNameBookNumber']);
+    Route::get('/Books/SearchAuthorNumber', [BookController::class, 'searchAuthorBookNumber']);
+    Route::get('/Books/SearchCategoryNumber', [BookController::class, 'searchCategoryBookNumber']);
     Route::get('/Books/ListBookBasic', [BookController::class, 'ListBookBasic']);
     Route::get('/Books/ListBookNumber', [BookController::class, 'ListBookNumber']);
     Route::get('/Books/DownloadPDF/{id}', [BookController::class, 'downloadPDF']);
@@ -66,8 +69,9 @@ Route::group(['middleware' => 'api'], function () {
         // book
         Route::post('/Books/AddBook', [BookController::class, 'store']);
         Route::post('/Books/UploadBook', [BookController::class, 'CreateBookNumber']);
-        Route::put('/Books/UpdateBook/{id}', [BookController::class, 'update']);
-        Route::delete('/Books/DeleteBook/{id}', [BookController::class, 'destroy']);        
+        Route::post('/Books/UpdateBook/{id}', [BookController::class, 'update']);
+        Route::delete('/Books/DeleteBook/{id}', [BookController::class, 'destroy']);     
+        Route::delete('/Books/DeleteBookNumber/{id}', [BookController::class, 'destroyBookNumber']);           
        
         // ticket
         Route::get('/Tickets/ListTicket', [TicketController::class, 'index']);

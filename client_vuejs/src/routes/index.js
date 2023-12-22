@@ -18,6 +18,7 @@ import AdminListTicketAccpet from "@/views/admin/LictTicketAcpect.vue";
 import AdminListTicketGiveback from "@/views/admin/ListTicketGiveback.vue";
 import FormUpdateAdmin from "@/views/admin/FormUpdateAdmin.vue";
 import AdminForm from "@/views/admin/Form.vue";
+import AdminFormUploadBook from "@/views/admin/FormUpload.vue";
 
 import BookDetail from "@/views/admin/DetailBook.vue";
 import BookDetailMuon from "@/views/admin/BookDetailMuon.vue";
@@ -71,7 +72,7 @@ const routes = [{
       meta: { title: 'Home' }
     },
     {
-      path: '/form-update-user',
+      path: '/form-update-user/:idUser',
       name: 'FormUpdateUser',
       component: FormUpdateUser,
       meta: { title: 'FormUpdateUser' }
@@ -95,7 +96,7 @@ const routes = [{
       meta: { title: 'UserForm' }
     },
     {
-      path: '/form-update-admin',
+      path: '/form-update-admin/:idBook',
       name: 'FormUpdateAdmin',
       component: FormUpdateAdmin,
       meta: { title: 'FormUpdateAdmin' }
@@ -105,6 +106,12 @@ const routes = [{
       name: 'AdminForm',
       component: AdminForm,
       meta: { title: 'AdminForm' }
+    },
+    {
+      path: '/admin-form-upload',
+      name: 'AdminFormUploadBook',
+      component: AdminFormUploadBook,
+      meta: { title: 'AdminFormUploadBook' }
     },
     {
       path: '/user-download',

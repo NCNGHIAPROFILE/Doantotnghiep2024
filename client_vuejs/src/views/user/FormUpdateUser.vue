@@ -261,7 +261,6 @@
     methods: {
         submitForm() {
           const formData = new FormData();
-          formData.append('id', this.params.id);
           formData.append('MaSV', this.params.mssv);
           formData.append('FistNameUser', this.params.firstname);
           formData.append('LastNameUser', this.params.lastname);
@@ -270,7 +269,7 @@
           formData.append('Phone', this.params.phone);
           formData.append('password', this.params.password);
           formData.append('ImageUser', this.params.avatar);
-          Request.put(`/Users/UpdateUser/${this.params.id}`, formData)        
+          Request.post(`Users/UpdateUser/${this.$route.params.idUser}`, formData)        
           .then(response => {
             console.log('Update successful:', response.data);
             this.$router.push({ name: "ListUser" });
@@ -284,6 +283,7 @@
             Request.post("logout")
             .then(response => {
                 console.log(response.data);
+                localStorage.clear();
                 this.$router.push('/login');
             })
             .catch(error => {
@@ -291,22 +291,23 @@
             });
         },
         getData() {
-            Request.get(`Users/ShowUser/${this.params.id}`)
+          console.log(this.$route.params.idUser);
+            Request.get("Users/ShowUser/" + this.$route.params.idUser)
             .then((response) => {
-                if (response.data.status === 200) {
-                    this.params = response.data.users;
-                    this.params.mssv = this.params.MaSV;
-                    this.params.firstname = this.params.FistNameUser;
-                    this.params.lastname = this.params.LastNameUser;
-                    this.params.classuser = this.params.Class;
-                    this.params.address = this.params.AddressUser;
-                    this.params.phone = this.params.Phone;
-                    this.params.avatar = this.params.ImageUser;
-                    console.log(response);
-                }
-                else{
-                    console.error('Error fetching user data:', response.data.message);
-                }
+              if (response.data.status === 200) {
+                this.params = response.data.users;
+                this.params.mssv = this.params.MaSV;
+                this.params.firstname = this.params.FistNameUser;
+                this.params.lastname = this.params.LastNameUser;
+                this.params.classuser = this.params.Class;
+                this.params.address = this.params.AddressUser;
+                this.params.phone = this.params.Phone;
+                this.params.avatar = this.params.ImageUser;
+                console.log(response);
+              }
+              else{
+                console.error('Error fetching user data:', response.data.message);
+              }
             })
             .catch(() => {})
             .finally(() => {});

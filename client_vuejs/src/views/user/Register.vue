@@ -12,7 +12,6 @@
                     </div>
                     <div style="padding-top: 50px;" class="login-header">{{ pleaseRegister }}</div>
                     <div style="text-align: center; color: red; font-size: 32px; font-weight: bold;">REGISTER</div>
-                    <div style="text-align: center; color: red; font-size: 12px; font-weight: inherit; padding-top: 20px;">{{ error }}</div>
                     <v-text-field style="padding-top: 10px;"
                       class="text-field-name"
                       placeholder="MSSV"
@@ -97,6 +96,7 @@
                     <div class="text-center">
                       <v-btn color="blue-grey" Raised width="300" @click="back">Back</v-btn>
                     </div>
+                    <div style="text-align: center; color: red; font-size: 12px; font-weight: inherit; padding-top: 20px;">{{ error }}</div>
                   </v-form>
                 </transition>
               </v-card-text>

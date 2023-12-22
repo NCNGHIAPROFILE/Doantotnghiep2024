@@ -101,7 +101,7 @@
       <v-data-table
         :headers="headers"
         :items="data?.users"
-        :items-per-page="5"
+        :items-per-page="5" 
         class="elevation-1"
         style="display: block;"
       >
@@ -111,12 +111,8 @@
         <template v-slot:[`item.actions`]="{ item }">
           <div>
             <div class="my-2">
-              <v-btn color="primary" fab x-small dark @click="update()">
+              <v-btn color="primary" fab x-small dark @click="update(item.id)">
                 <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-              &nbsp;
-              <v-btn color="warning" fab x-small dark @click="view()">
-                <v-icon>mdi mdi-eye-outline</v-icon>
               </v-btn>
               &nbsp;
               <v-btn color="error" fab x-small dark @click="remove(item)">
@@ -159,8 +155,9 @@
       onFileChange() {
         console.log("Selected file:", this.selectedFile);
       },
-      update() {
-        this.$router.push({ name: "FormUpdateUser" });
+      update(idUser) {
+        console.log(idUser);
+        this.$router.push({ path: "/form-update-user/" + idUser });
       },
       remove(item) {
         Request.delete("Users/DeleteUser/" + item.id)
@@ -192,6 +189,7 @@
             Request.post("logout")
             .then(response => {
                 console.log(response.data);
+                localStorage.clear();
                 this.$router.push('/login');
             })
             .catch(error => {
@@ -253,6 +251,10 @@
   <style>
   .inline {
     display: flex;
+  }
+
+  .elevation-1 {
+    padding-bottom: 50px !important;
   }
   </style>
   

@@ -4,6 +4,17 @@
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
   
         <v-toolbar-title class="mr-6">List Phiếu đã duyệt</v-toolbar-title>
+        <v-text-field
+          v-model="search"
+          label="Tìm kiếm..."
+          hide-details
+          append-icon="mdi-magnify"
+          flat
+          solo-inverted
+          dense
+          style="padding-left: 10px; width: 50px;"
+        ></v-text-field>
+        <v-btn class="ma-2" outlined color="#90CAF9" @click="onSearch()"> Search </v-btn>
         <v-spacer></v-spacer>
   
         <v-btn class="ma-2" outlined color="#90CAF9" @click="logout()">
@@ -120,49 +131,50 @@
     },
     methods: {
         logout() {
-            Request.post("logout")
-            .then(response => {
-                console.log(response.data);
-                this.$router.push('/login');
-            })
-            .catch(error => {
-                console.error('Logout error:', error);
-            });
+          Request.post("logout")
+          .then(response => {
+              console.log(response.data);
+              localStorage.clear();
+              this.$router.push('/login');
+          })
+          .catch(error => {
+              console.error('Logout error:', error);
+          });
         },
         getData() {
-            Request.get("Tickets/ListTicketUserApcept")
-            .then((response) => {
-                console.log(response.data);
-                this.data = response.data;
-            })
-            .catch(() => {})
-            .finally(() => {});
+          Request.get("Tickets/ListTicketUserApcept")
+          .then((response) => {
+              console.log(response.data);
+              this.data = response.data;
+          })
+          .catch(() => {})
+          .finally(() => {});
         },
         handleMenuItemClick(item) {
-            if (item == 1){
-                this.$router.push({ name: "UserListTicketCreate" });
-            }else if (item == 2){
-                this.$router.push({ name: "UserListTicketAccpet" });
-            }else if (item == 3){
-                this.$router.push({ name: "UserListTicketGiveback" });
-            }
+          if (item == 1){
+              this.$router.push({ name: "UserListTicketCreate" });
+          }else if (item == 2){
+              this.$router.push({ name: "UserListTicketAccpet" });
+          }else if (item == 3){
+              this.$router.push({ name: "UserListTicketGiveback" });
+          }
         },
         handleMenuItemClickBook(item) {
-            if (item == 1){
-                this.$router.push({ name: "Home" });
-            }else if (item == 2){
-                this.$router.push({ name: "UserListBookNumber" });
-            }
+          if (item == 1){
+              this.$router.push({ name: "Home" });
+          }else if (item == 2){
+              this.$router.push({ name: "UserListBookNumber" });
+          }
         },
         handleUserItemClick(item) {
-            if (item == 1){
-                this.$router.push({ name: "UserInfo" });
-            }else if (item == 2){
-                this.$router.push({ name: "UserPassword" });
-            }
+          if (item == 1){
+              this.$router.push({ name: "UserInfo" });
+          }else if (item == 2){
+              this.$router.push({ name: "UserPassword" });
+          }
         },
         handleUserHistoryClick(){
-            this.$router.push({ name: "UserHistory" });
+          this.$router.push({ name: "UserHistory" });
         }
     },
   };

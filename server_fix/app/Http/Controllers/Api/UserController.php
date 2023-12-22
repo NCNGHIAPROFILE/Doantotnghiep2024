@@ -137,57 +137,64 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = JWTAuth::parseToken()->authenticate();
-        if($user){
-            $users = User::find($id);
-            if($users){
-                $dataCreate = $request->all();
-                $tmpMSSV = $request->MaSV;
-                $dataCreate['MaSV'] = $tmpMSSV;
-                $dataCreate['FistNameUser'] = $request->FistNameUser;
-                $tmpName = $request->LastNameUser;
-                $dataCreate['LastNameUser'] = $tmpName;
-                if (strstr($tmpName, ' ')) {
-                    return response()->json([
-                        'status' => 500,
-                        'message' => "User Update Failed!",
-                        'users' => $tmpName
-                    ], 500);
-                }
-                $dataCreate['Class'] = $request->Class;
-                $dataCreate['AddressUser'] = $request->AddressUser;
-                $dataCreate['Phone'] = $request->Phone;
-                $name = Str::slug($tmpName, '_');
-                $dataCreate['email'] = $name . "_" . $tmpMSSV . "@dau.edu.vn";
-                $dataCreate['password'] = Hash::make($request->password);
-                if ($request->hasFile('ImageUser')) {
-                    $avatar = $request->file('ImageUser');
-                    $imageName = time() . '.' . $avatar->getClientOriginalExtension();
-                    $avatar->move(public_path('images'), $imageName);
-                    $avatarPath = $imageName;
-                } else {
-                    $avatarPath = null;
-                }
-                $dataCreate['ImageUser'] = $avatarPath;
-                $udapetUsers = $users->update($dataCreate);
-                return response()->json([
-                    'status' => 200,
-                    'message' => "Users Update Successfully!",
-                    'users' => $udapetUsers
-                ], 200);
-            }
-            else{
-                return response()->json([
-                    'status' => 500,
-                    'message' => "Users Update Failed!"
-                ], 500);
-            }
-        } else {
+        $user = User::find($id);
+
+        if (!$user) {
             return response()->json([
-                'status' => 400,
-                'message' => "You are not logged in! Login Now."
-            ], 400);
+                'status' => 404,
+                'message' => 'User not found',
+            ], 404);
         }
+
+        $request->validate([
+            'FistNameUser' => 'required|string',
+            'LastNameUser' => 'required|string|not_regex:/\s+/',
+            'Class' => 'required|string',
+            'AddressUser' => 'required|string',
+            'Phone' => 'required|string',
+        ]);
+
+        $dataUpdate = [
+            'MaSV' => $request->MaSV,
+            'FistNameUser' => $request->FistNameUser,
+            'LastNameUser' => $request->LastNameUser,
+            'Class' => $request->Class,
+            'AddressUser' => $request->AddressUser,
+            'Phone' => $request->Phone,
+        ];
+
+        if ($request->has('password')) {
+            $dataUpdate['password'] = Hash::make($request->password);
+        }
+
+        $dataUpdate['email'] = Str::slug($dataUpdate['LastNameUser'], '_') . "_" . $dataUpdate['MaSV'] . "@dau.edu.vn";
+
+        if ($request->hasFile('ImageUser')) {
+            $avatar = $request->file('ImageUser');
+            $imageName = time() . '.' . $avatar->getClientOriginalExtension();
+            $avatar->move(public_path('images'), $imageName);
+            $dataUpdate['ImageUser'] = $imageName;
+        }
+
+        $user->MaSV = $dataUpdate['MaSV'];
+        $user->FistNameUser = $dataUpdate['FistNameUser'];
+        $user->LastNameUser = $dataUpdate['LastNameUser'];
+        $user->Class = $dataUpdate['Class'];
+        $user->AddressUser = $dataUpdate['AddressUser'];
+        $user->Phone = $dataUpdate['Phone'];
+        if (isset($dataUpdate['password'])) {
+            $user->password = $dataUpdate['password'];
+        }
+        $user->email = $dataUpdate['email'];
+        if (isset($dataUpdate['ImageUser'])) {
+            $user->ImageUser = $dataUpdate['ImageUser'];
+        }
+        $user->save();
+        return response()->json([
+            'status' => 200,
+            'message' => 'User Updated Successfully!',
+            'user' => $user,
+        ], 200);
     }
 
     /**

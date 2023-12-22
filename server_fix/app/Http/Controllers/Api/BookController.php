@@ -158,22 +158,32 @@ class BookController extends Controller
         }
     }
 
-    public function ListBookBasic()
+    public function ListBookBasic(Request $request)
     {
+        // if ($request->has('searchNameBook')){
+        //     $searchData = $request->input('searchNameBook');
+        //     $books = Book::where('NameBook', 'like', '%'.$searchData.'%')->where('type', 0)->get();
+        //     $booksCount = $books->count();
+        // } else if ($request->has('searchAuthorBook')){
+        //     $searchData = $request->input('searchAuthorBook');
+        //     $books = Book::where('Author', 'like', '%'.$searchData.'%')->where('type', 0)->get();
+        //     $booksCount = $books->count();
+        // } else if ($request->has('searchCategoryBook')){
+        //     $searchData = $request->input('searchCategoryBook');
+        //     $books = Book::where('Category', 'like', '%'.$searchData.'%')->where('type', 0)->get();
+        //     $booksCount = $books->count();
+        // } else{
+        //     $books = Book::where('Type', 0)->get();
+        //     $booksCount = $books->count();
+        // }
         $books = Book::where('Type', 0)->get();
-        if(!$books->isEmpty()){
-            return response()->json([
-                'status' => 200,
-                'message' => "List book Basic Successfully!",
-                'books' => $books
-            ], 200);
-        }
-        else{
-            return response()->json([
-                'status' => 400,
-                'message' => "View list Books Failed! Because books do not exist!"
-            ], 400);
-        }
+        $booksCount = $books->count();
+        return response()->json([
+            'status' => 200,
+            'message' => "List book Basic Successfully!",
+            'quantity' => $booksCount,
+            'books' => $books
+        ], 200);
     }
 
     public function ListBookNumber()
@@ -260,10 +270,35 @@ class BookController extends Controller
         }
     }
 
-    public function searchNameBook(Request $request){
-        $searchData = $request->input('searchNameBook');
-        $books = Book::Where('NameBook', 'like', '%'.$searchData.'%');
-        $booksCount = Book::Where('NameBook', 'like', '%'.$searchData.'%')->count();
+    public function destroyBookNumber(string $id)
+    {
+        $user = JWTAuth::parseToken()->authenticate();        
+        if($user){
+            $affectedRows = Book::where('id', $id)->delete();
+            if ($affectedRows > 0) {
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Books Deleted Successfully",
+                ], 200);
+            }  
+            else {
+                return response()->json([
+                    'status' => 500,
+                    'message' => "Books Deleted Failed!",
+                ], 500);
+            }
+        } else {
+            return response()->json([
+                'status' => 400,
+                'message' => "You are not logged in! Login Now."
+            ], 400);
+        }
+    }
+
+    public function searchNameBookBasic(Request $request){
+        $searchData = $request->input('searchNameBookBasic');
+        $books = Book::Where('NameBook', 'like', '%'.$searchData.'%')->where('type', 0);
+        $booksCount = $books->count();
         if($books->exists()){
             return response()->json([
                 'status' => 200,
@@ -280,10 +315,10 @@ class BookController extends Controller
         }
     }
 
-    public function searchAuthorBook(Request $request){
-        $searchData = $request->input('searchAuthorBook');
-        $books = Book::Where('Author', 'like', '%'.$searchData.'%');
-        $booksCount = Book::Where('Author', 'like', '%'.$searchData.'%')->count();
+    public function searchAuthorBookBasic(Request $request){
+        $searchData = $request->input('searchAuthorBookBasic');
+        $books = Book::Where('Author', 'like', '%'.$searchData.'%')->where('type', 0);
+        $booksCount = $books->count();
         if($books->exists()){
             return response()->json([
                 'status' => 200,
@@ -300,10 +335,70 @@ class BookController extends Controller
         }
     }
 
-    public function searchCategoryBook(Request $request){
-        $searchData = $request->input('searchCategoryBook');
-        $books = Book::Where('Category', 'like', '%'.$searchData.'%');
-        $booksCount = Book::Where('Category', 'like', '%'.$searchData.'%')->count();
+    public function searchCategoryBookBasic(Request $request){
+        $searchData = $request->input('searchCategoryBookBasic');
+        $books = Book::Where('Category', 'like', '%'.$searchData.'%')->where('type', 0);
+        $booksCount = $books->count();
+        if($books->exists()){
+            return response()->json([
+                'status' => 200,
+                'message' => "Books Search Successfully",
+                'Resource' => $booksCount,
+                'books' => $books->get()
+            ], 200);
+        }
+        else{
+            return response()->json([
+                'status' => 400,
+                'message' => "Books Search Failed!"
+            ], 200);
+        }
+    }
+
+    public function searchNameBookNumber(Request $request){
+        $searchData = $request->input('searchNameBookNumber');
+        $books = Book::Where('NameBook', 'like', '%'.$searchData.'%')->where('type', 1);
+        $booksCount = $books->count();
+        if($books->exists()){
+            return response()->json([
+                'status' => 200,
+                'message' => "Books Search Successfully",
+                'Resource' => $booksCount,
+                'books' => $books->get()
+            ], 200);
+        }
+        else{
+            return response()->json([
+                'status' => 400,
+                'message' => "Books Search Failed!"
+            ], 200);
+        }
+    }
+
+    public function searchAuthorBookNumber(Request $request){
+        $searchData = $request->input('searchAuthorBookNumber');
+        $books = Book::Where('Author', 'like', '%'.$searchData.'%')->where('type', 1);
+        $booksCount = $books->count();
+        if($books->exists()){
+            return response()->json([
+                'status' => 200,
+                'message' => "Books Search Successfully",
+                'Resource' => $booksCount,
+                'books' => $books->get()
+            ], 200);
+        }
+        else{
+            return response()->json([
+                'status' => 400,
+                'message' => "Books Search Failed!"
+            ], 200);
+        }
+    }
+
+    public function searchCategoryBookNumber(Request $request){
+        $searchData = $request->input('searchCategoryBookNumber');
+        $books = Book::Where('Category', 'like', '%'.$searchData.'%')->where('type', 1);
+        $booksCount = $books->count();
         if($books->exists()){
             return response()->json([
                 'status' => 200,
