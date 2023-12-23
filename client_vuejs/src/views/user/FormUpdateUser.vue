@@ -209,7 +209,6 @@
         valid: false,
         passwordShow: false,
         params: {
-          id: "",
           firstname: "",
           lastname: "",
           mssv: "",
@@ -255,7 +254,6 @@
       };
     },
     created() {
-        console.log(this.params.id);
         this.getData();
     },
     methods: {

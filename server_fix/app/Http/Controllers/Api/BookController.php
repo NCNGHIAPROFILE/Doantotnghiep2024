@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Book;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Facades\JWTAuth;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class BookController extends Controller
 {
@@ -160,22 +160,6 @@ class BookController extends Controller
 
     public function ListBookBasic(Request $request)
     {
-        // if ($request->has('searchNameBook')){
-        //     $searchData = $request->input('searchNameBook');
-        //     $books = Book::where('NameBook', 'like', '%'.$searchData.'%')->where('type', 0)->get();
-        //     $booksCount = $books->count();
-        // } else if ($request->has('searchAuthorBook')){
-        //     $searchData = $request->input('searchAuthorBook');
-        //     $books = Book::where('Author', 'like', '%'.$searchData.'%')->where('type', 0)->get();
-        //     $booksCount = $books->count();
-        // } else if ($request->has('searchCategoryBook')){
-        //     $searchData = $request->input('searchCategoryBook');
-        //     $books = Book::where('Category', 'like', '%'.$searchData.'%')->where('type', 0)->get();
-        //     $booksCount = $books->count();
-        // } else{
-        //     $books = Book::where('Type', 0)->get();
-        //     $booksCount = $books->count();
-        // }
         $books = Book::where('Type', 0)->get();
         $booksCount = $books->count();
         return response()->json([
@@ -211,28 +195,63 @@ class BookController extends Controller
     {
         $user = JWTAuth::parseToken()->authenticate();
         if($user){
-            $books = Book::select('Status')->where('id', $id)->where('Status', '=', '0')->get();
-            if($books->count() > 0){
-                $books = array();
-                $books['NameBook'] = $request->NameBook;
-                $books['Author'] = $request->Author;
-                $books['Category'] = $request->Category;
-                $books['MaProducer'] = $request->MaProducer;
-                $books['Content'] = $request->Content;
-                $books['Picture'] = $request->Picture;
-                $books['Sum_Quantity'] = $request->Sum_Quantity;
-                $udapetBook = Book::where('id', $id)->update($books);
+            $params = $request->all();
+            $params['id'] = $id;
+            $books = Book::where('NameBook', $params['NameBook'])->where('Author', $params['Author']);
+            if($books->exists()){
+                if ($request->hasFile('Picture')) {
+                    $avatar = $request->file('Picture');
+                    $imageName = time() . '.' . $avatar->getClientOriginalExtension();
+                    $avatar->move(public_path('images'), $imageName);
+                    $avatarPath = $imageName;
+                } else {
+                    $avatarPath = null;
+                }
+                $params['Picture'] = $avatarPath;
+                DB::table('books')->where('id', $id)->update(
+                    [
+                        'NameBook' => $params['NameBook'],
+                        'Author' => $params['Author'],
+                        'Category' => $params['Category'],
+                        'MaProducer' => $params['MaProducer'],
+                        'Content' => $params['Content'],
+                        'Picture' => $params['Picture'],
+                        'Sum_Quantity' => $params['Sum_Quantity'],
+                    ]
+                );
                 return response()->json([
                     'status' => 200,
-                    'message' => "Books Update Successfully!",
-                    'books' => $udapetBook
+                    'message' => "books Update Successfully!",
+                    'books' => $books
                 ], 200);
             }
             else{
+                if ($request->hasFile('Picture')) {
+                    $avatar = $request->file('Picture');
+                    $imageName = time() . '.' . $avatar->getClientOriginalExtension();
+                    $avatar->move(public_path('images'), $imageName);
+                    $avatarPath = $imageName;
+                } else {
+                    $avatarPath = null;
+                }
+                $params['Picture'] = $avatarPath;
+                $params['NameBook'] = Str::slug($params['NameBook'], '_') . "_" . $params['Author'];
+                DB::table('books')->where('id', $id)->update(
+                    [
+                        'NameBook' => $params['NameBook'],
+                        'Author' => $params['Author'],
+                        'Category' => $params['Category'],
+                        'MaProducer' => $params['MaProducer'],
+                        'Content' => $params['Content'],
+                        'Picture' => $params['Picture'],
+                        'Sum_Quantity' => $params['Sum_Quantity'],
+                    ]
+                );
                 return response()->json([
-                    'status' => 500,
-                    'message' => "Books Update Failed!"
-                ], 500);
+                    'status' => 200,
+                    'message' => "books Update Successfully!",
+                    'books' => $books
+                ], 200);
             }
         } else {
             return response()->json([

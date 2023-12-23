@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\UserImport;
+use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
@@ -137,59 +138,42 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = User::find($id);
-
+        $params = $request->all();
+        $user = User::where('id', $id)->first();
+        $params['id'] = $id;
         if (!$user) {
             return response()->json([
                 'status' => 404,
                 'message' => 'User not found',
             ], 404);
         }
-
-        $request->validate([
-            'FistNameUser' => 'required|string',
-            'LastNameUser' => 'required|string|not_regex:/\s+/',
-            'Class' => 'required|string',
-            'AddressUser' => 'required|string',
-            'Phone' => 'required|string',
-        ]);
-
-        $dataUpdate = [
-            'MaSV' => $request->MaSV,
-            'FistNameUser' => $request->FistNameUser,
-            'LastNameUser' => $request->LastNameUser,
-            'Class' => $request->Class,
-            'AddressUser' => $request->AddressUser,
-            'Phone' => $request->Phone,
-        ];
-
-        if ($request->has('password')) {
-            $dataUpdate['password'] = Hash::make($request->password);
-        }
-
-        $dataUpdate['email'] = Str::slug($dataUpdate['LastNameUser'], '_') . "_" . $dataUpdate['MaSV'] . "@dau.edu.vn";
-
         if ($request->hasFile('ImageUser')) {
             $avatar = $request->file('ImageUser');
             $imageName = time() . '.' . $avatar->getClientOriginalExtension();
             $avatar->move(public_path('images'), $imageName);
-            $dataUpdate['ImageUser'] = $imageName;
+            $avatarPath = $imageName;
+        } else {
+            $avatarPath = null;
+        }
+        $params['ImageUser'] = $avatarPath;
+        if ($params['password']) {
+            $params['password'] = Hash::make($params['password']);
         }
 
-        $user->MaSV = $dataUpdate['MaSV'];
-        $user->FistNameUser = $dataUpdate['FistNameUser'];
-        $user->LastNameUser = $dataUpdate['LastNameUser'];
-        $user->Class = $dataUpdate['Class'];
-        $user->AddressUser = $dataUpdate['AddressUser'];
-        $user->Phone = $dataUpdate['Phone'];
-        if (isset($dataUpdate['password'])) {
-            $user->password = $dataUpdate['password'];
-        }
-        $user->email = $dataUpdate['email'];
-        if (isset($dataUpdate['ImageUser'])) {
-            $user->ImageUser = $dataUpdate['ImageUser'];
-        }
-        $user->save();
+        $params['email'] = Str::slug($params['LastNameUser'], '_') . "_" . $params['MaSV'] . "@dau.edu.vn";
+        DB::table('users')->where('id', $id)->update(
+            [
+                'MaSV' => $params['MaSV'],
+                'FistNameUser' => $params['FistNameUser'],
+                'LastNameUser' => $params['LastNameUser'],
+                'Class' => $params['Class'],
+                'AddressUser' => $params['AddressUser'],
+                'Phone' => $params['Phone'],
+                'email' => $params['email'],
+                'password' => $params['password'],
+                'ImageUser' => $params['ImageUser'],
+            ]
+        );
         return response()->json([
             'status' => 200,
             'message' => 'User Updated Successfully!',

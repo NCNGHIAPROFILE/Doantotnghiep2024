@@ -113,13 +113,12 @@ class TicketController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, String $id)
+    public function store(String $id)
     {
         $user = JWTAuth::parseToken()->authenticate();
         if($user) {
-            $recordUser = User::where('MaSV', $user->MaSV)->first();
             $books = Book::where('id', $id)->first();
-            if($recordUser && $books){
+            if($books){
                 $fieldValue = $books->Quantity;
                 if($fieldValue > 0){
                     $dataCreate['MaSV'] = $user->MaSV;

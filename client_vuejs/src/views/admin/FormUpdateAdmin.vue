@@ -224,9 +224,9 @@
         const formData = new FormData();
         formData.append('NameBook', this.params.namebook);
         formData.append('Author', this.params.author);
-        formData.append('Content', this.params.content);
         formData.append('Category', this.params.category);
         formData.append('MaProducer', this.params.producer);
+        formData.append('Content', this.params.content);
         formData.append('Sum_Quantity', this.params.sum_quantity);
         formData.append('Picture', this.params.avatar);
         Request.post(`Books/UpdateBook/${this.$route.params.idBook}`, formData)

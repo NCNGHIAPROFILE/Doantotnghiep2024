@@ -116,7 +116,6 @@ export default {
         { text: "MaTicket", value: "MaTicket" },
         { text: "MaSach", value: "MaSach" },
         { text: "MaSV", value: "MaSV" },
-        { text: "MaAdmin", value: "MaAdmin" },
         { text: "DateGiveBack", value: "DateGiveBack" },
         { text: "DateCreateTicket", value: "DateCreateTicket" },
         { text: "DateAcceptTiket", value: "DateAcceptTiket" },
