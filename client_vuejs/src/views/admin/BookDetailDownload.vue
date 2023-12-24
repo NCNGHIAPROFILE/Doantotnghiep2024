@@ -49,7 +49,7 @@
           </v-card-text>
 
           <v-card-actions>
-            <v-btn color="error" @click="createticket">
+            <v-btn color="error" @click="downloadfile">
               <span class="mdi mdi-download-box"></span>
               Tải về</v-btn>
           </v-card-actions>
@@ -155,21 +155,9 @@ export default {
     this.viewDetails();
   },
   methods: {
-    createticket(){
-      console.log(this.$route.params.idBook);
-      Request.get("Books/DownloadPDF/9")
-        .then(response => {
-          console.log('Download file successful:', response.data);
-          var nameFile = response.data?.file;
-          const link = document.createElement('a');
-          link.href = "#";
-          link.download = nameFile;
-          link.click();
-      })
-      .catch(error => {
-        console.error('Registration error:', error.response.data);
-        this.$router.push({ name: "PageNotFound" });
-      });
+    downloadfile(){
+      let download = `http://localhost:8000/files_Upload/` + this.books.FileName;
+      window.open(download, '_blank');
     },
     logout() {
       Request.post("logout")
@@ -265,11 +253,9 @@ export default {
         this.currentPage = page;
       },
     viewDetails() {
-      console.log(this.$route.params.idBook);
       Request.get("Books/ShowBook/" + this.$route.params.idBook)
       .then((response) => {
         this.books = response.data.books;
-        console.log(response);
       })
       .catch(() => {})
       .finally(() => {});
