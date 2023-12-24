@@ -86,10 +86,7 @@
               </template>
               <v-list color="#B2EBF2">
                 <v-list-item>
-                  <v-btn text @click="handleUserItemClick('1')">Cập nhật thông tin</v-btn>
-                </v-list-item>
-                <v-list-item>
-                  <v-btn text @click="handleUserItemClick('2')">Thay đổi password</v-btn>
+                  <v-btn text @click="handleUserItemClick()">Thay đổi password</v-btn>
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -166,12 +163,8 @@
               this.$router.push({ name: "UserListBookNumber" });
           }
         },
-        handleUserItemClick(item) {
-          if (item == 1){
-              this.$router.push({ name: "UserInfo" });
-          }else if (item == 2){
-              this.$router.push({ name: "UserPassword" });
-          }
+        handleUserItemClick() {
+              this.$router.push({ name: "UpdatePassword" });
         },
         handleUserHistoryClick(){
           this.$router.push({ name: "UserHistory" });

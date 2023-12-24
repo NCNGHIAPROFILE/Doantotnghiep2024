@@ -156,6 +156,7 @@ export default {
   },
   methods: {
     downloadfile(){
+      console.log(this.books.FileName);
       let download = `http://localhost:8000/files_Upload/` + this.books.FileName;
       window.open(download, '_blank');
     },

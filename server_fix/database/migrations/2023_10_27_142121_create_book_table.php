@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('MaProducer')->nullable();
             $table->date('YearPublish')->nullable();
             $table->integer('Quantity')->nullable();
-            $table->string('Content', 255)->nullable();
+            $table->text('Content')->nullable();
             $table->integer('Status');
             $table->string('Picture', 255)->nullable();
             $table->string('FileName', 255)->nullable();

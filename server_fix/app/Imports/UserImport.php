@@ -38,7 +38,7 @@ class UserImport implements ToModel, WithHeadingRow
                 'Phone' => $phone,
                 'email' => $email,
                 'password' => Hash::make('123456789'),
-                'ImageUser' => '1700892153.jpg',
+                'ImageUser' => '1703381215.png',
                 'role' => 'user'
             ]);
         }

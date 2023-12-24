@@ -32,6 +32,7 @@ import DashboarchAdmin from "@/views/dashboarch/Admin.vue";
 import ListUser from "@/views/user/ListUser.vue";
 // import OTP from "@/views/user/otp.vue";
 import VerifyOTP from "@/views/user/Verify_OTP.vue";
+import UpdatePassword from "@/views/login/UpdatePassword.vue";
 import Register from "@/views/user/Register.vue";
 import Test from "@/views/ticket/test.vue";
 
@@ -70,6 +71,12 @@ const routes = [{
       name: 'Home',
       component: Home,
       meta: { title: 'Home' }
+    },
+    {
+      path: '/update-password',
+      name: 'UpdatePassword',
+      component: UpdatePassword,
+      meta: { title: 'UpdatePassword' }
     },
     {
       path: '/form-update-user/:idUser',
