@@ -201,7 +201,6 @@
         ],
         Rulescontent: [
             (v) => !!v || 'Content is required',
-            (v) => v.length <= 255 || 'Content must be less than 255 characters',
         ],
         Rulescategory: [
             (v) => !!v || 'Category is required',
