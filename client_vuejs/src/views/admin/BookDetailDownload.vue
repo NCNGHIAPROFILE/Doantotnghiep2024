@@ -302,6 +302,5 @@ export default {
 }
 .subheading {
   font-size: 16px;
-  margin-top: 5px;
 }
 </style>

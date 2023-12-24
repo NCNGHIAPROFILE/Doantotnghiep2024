@@ -312,8 +312,6 @@
   }
   .subheading {
     font-size: 16px;
-    margin-top: 100px;
-    padding-top: 20px;
   }
   </style>
   
